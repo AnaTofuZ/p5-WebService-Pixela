@@ -23,18 +23,18 @@ sub create {
     my $client = $self->client;
 
     my $uri = URI->new($client->base_url);
-
-    print $uri->as_string,"\n";
-    my $content = {
-        token => $client->token,
-        username => $client->username,
-        agreeTermsOfService => $args{areeTermsOfService} || "No",
-        notMinor => $args{notMinor} || "No",
-    };
     $uri->path('/v1/users');
+
+    my $content = {
+        token               => $client->token,
+        username            => $client->username,
+        agreeTermsOfService => $args{areeTermsOfService} || "No",
+        notMinor            => $args{notMinor} || "No",
+    };
+
     my $res = $client->_agent->request(
-        method => 'POST',
-        url    => $uri->as_string,
+        method  => 'POST',
+        url     => $uri->as_string,
         content => encode_json($content),
     );
 }
