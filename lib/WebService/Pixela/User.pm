@@ -30,6 +30,7 @@ sub create {
         notMinor            => $args{notMinor}            || "yes",
     };
     my $res = $client->request('POST','users/',$params);
+    return $res;
 }
 
 sub update {
@@ -37,15 +38,19 @@ sub update {
     my $client = $self->client;
 
     my $params = {
-        header  => {
-            'X-USER-TOKEN' => $client->token,
-        },
-        content => encode_json({
-            newToken    => $newtoken,
-        }),
+        newToken    => $newtoken,
     };
-    $client->request('PUT',('users/'.$client->username),$params);
+    my $res = $client->request_with_xuser_in_header('PUT',('users/'.$client->username),$params);
     $self->client->token = $newtoken;
+    return $res;
+}
+
+sub delete {
+    my $self = shift;
+    my $client = $self->client;
+
+    my $res = $client->request_with_xuser_in_header('DELETE',('users/'.$client->username),{});
+    return $res;
 }
 
 
