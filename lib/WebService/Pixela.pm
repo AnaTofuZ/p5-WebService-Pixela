@@ -77,7 +77,7 @@ __END__
 
 =head1 NAME
 
-WebService::Pixela - It's Pixe.la API client for Perl.
+WebService::Pixela - It's L<https://pixe.la> API client for Perl.
 
 =head1 SYNOPSIS
 
@@ -101,7 +101,13 @@ WebService::Pixela - It's Pixe.la API client for Perl.
 
 =head1 DESCRIPTION
 
-WebService::Pixela is API client about Pixe.la.
+WebService::Pixela is API client about L<https://pixe.la>
+
+=head1 ORIGINAL API DOCUMENTATION
+
+See also L<https://docs.pixe.la/> .
+
+This module corresponds to version 1.
 
 =head1 INTERFACE
 

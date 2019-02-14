@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "It's L<https://pixe.la> API client for Perl.",
    "author" : [
       "Takahiro SHIMIZU <anatofuz@gmail.com>"
    ],
@@ -57,6 +57,17 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/AnaTofuZ/p5-WebService-Pixela/issues"
+      },
+      "homepage" : "https://github.com/AnaTofuZ/p5-WebService-Pixela",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/AnaTofuZ/p5-WebService-Pixela.git",
+         "web" : "https://github.com/AnaTofuZ/p5-WebService-Pixela"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:ANATOFUZ",
    "x_serialization_backend" : "JSON::PP version 2.27400_02",
