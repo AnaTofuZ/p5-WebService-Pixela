@@ -1,4 +1,5 @@
 requires 'perl', '5.008001';
+requires 'IO::Socket::SSL';
 requires 'Class::Accessor::Lite';
 requires 'Furl';
 requires 'JSON';

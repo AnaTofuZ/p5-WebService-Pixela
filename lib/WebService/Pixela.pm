@@ -4,18 +4,19 @@ use strict;
 use warnings;
 use Furl;
 use Carp qw/croak/;
+use WebService::Pixela::User;
 use URI;
 use JSON;
-use WebService::Pixela::User;
 use Class::Accessor::Lite(
-    ro => [qw/
+    new => 0,
+    ro  => [qw/
         user
         graph
         pixel
         webhook
         _agent
     /],
-    rw => [qw/
+    rw  => [qw/
         username
         token
         base_url
@@ -27,15 +28,30 @@ our $VERSION = "0.01";
 sub new {
     my ($class,%args) = @_;
     my $self = bless +{}, $class;
-    $self->{username} =  $args{username} || croak 'require username';
-    $self->{token}    =  $args{token}    || undef;
-    $self->{base_url} =  $args{base_url} || "https://pixe.la/";
-    $self->{_agent} = Furl->new(agent => "$class/$VERSION");
-    $self->{user}   = WebService::Pixela::User->new($self);
+
+    # initalize
+    $self->{username} = $args{username} || croak 'require username';
+    $self->{token}    = $args{token}    || undef;
+    $self->{base_url} = $args{base_url} || "https://pixe.la/";
+    $self->{_agent}   = Furl->new(agent => "$class/$VERSION");
+    $self->{user}     = WebService::Pixela::User->new($self);
+
     return $self;
 }
 
+sub simple_request {
+    my ($self,$method,$path,$content) = @_;
 
+    my $uri = URI->new($self->base_url);
+    $uri->path($path);
+
+    my $res = $self->_agent->request(
+        method  => $method,
+        url     => $uri->as_string,
+        content => encode_json($content),
+    );
+    return $res;
+}
 
 
 1;

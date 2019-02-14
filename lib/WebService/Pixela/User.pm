@@ -3,11 +3,6 @@ use 5.008001;
 use strict;
 use warnings;
 use Carp qw/croak/;
-use URI;
-use JSON;
-use Class::Accessor::Lite(
-    rw => [qw/client/],
-);
 
 our $VERSION = "0.01";
 
@@ -18,25 +13,22 @@ sub new {
     }, $class;
 }
 
+sub client {
+    my $self = shift;
+    return $self->{client};
+}
+
 sub create {
     my ($self,%args) = @_;
     my $client = $self->client;
 
-    my $uri = URI->new($client->base_url);
-    $uri->path('/v1/users');
-
     my $content = {
         token               => $client->token,
         username            => $client->username,
-        agreeTermsOfService => $args{areeTermsOfService} || "No",
+        agreeTermsOfService => $args{agreeTermsOfService} || "No",
         notMinor            => $args{notMinor} || "No",
     };
-
-    my $res = $client->_agent->request(
-        method  => 'POST',
-        url     => $uri->as_string,
-        content => encode_json($content),
-    );
+    my $res = $client->simple_request('POST','/v1/users/',$content);
 }
 
 
