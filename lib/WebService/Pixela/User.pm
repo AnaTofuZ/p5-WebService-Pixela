@@ -3,6 +3,7 @@ use 5.008001;
 use strict;
 use warnings;
 use Carp qw/croak/;
+use JSON qw/encode_json/;
 
 our $VERSION = "0.01";
 
@@ -22,13 +23,29 @@ sub create {
     my ($self,%args) = @_;
     my $client = $self->client;
 
-    my $content = {
-        username            => $client->username          || croak 'require username',
-        token               => $client->token             || croak 'require token',
+    my $params = {
+        username            => $client->username,
+        token               => $client->token,
         agreeTermsOfService => $args{agreeTermsOfService} || "yes",
         notMinor            => $args{notMinor}            || "yes",
     };
-    my $res = $client->simple_request('POST','/v1/users/',$content);
+    my $res = $client->request('POST','users/',$params);
+}
+
+sub update {
+    my ($self,$newtoken) = @_;
+    my $client = $self->client;
+
+    my $params = {
+        header  => {
+            'X-USER-TOKEN' => $client->token,
+        },
+        content => encode_json({
+            newToken    => $newtoken,
+        }),
+    };
+    $client->request('PUT',('users/'.$client->username),$params);
+    $self->client->token = $newtoken;
 }
 
 

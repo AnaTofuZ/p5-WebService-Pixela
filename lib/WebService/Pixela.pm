@@ -39,18 +39,35 @@ sub new {
     return $self;
 }
 
-sub simple_request {
-    my ($self,$method,$path,$content) = @_;
+
+sub _request {
+    my ($self,$method,$path,$params) = @_;
 
     my $uri = URI->new($self->base_url);
-    $uri->path($path);
+    $uri->path("/v1/".$path);
 
-    my $res = $self->_agent->request(
-         $method,
-         $uri->as_string,
-         {content => encode_json($content)},
-    );
-    return $res;
+    return $self->_agent->request($method, $uri->as_string, $params);
+}
+
+sub request {
+    my ($self,$method,$path,$content) = @_;
+
+    my $params = {
+        content => encode_json($content),
+    };
+
+    return $self->_request($method,$path,$params);
+}
+
+sub request_with_xuser_in_header {
+    my ($self,$method,$path,$content) = @_;
+
+    my $params = {
+        headers => { 'X-USER-TOKEN' => $self->token },
+        content => encode_json($content),
+    };
+
+    return $self->_request($method,$path,$params);
 }
 
 1;
