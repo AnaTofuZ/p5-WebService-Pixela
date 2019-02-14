@@ -2,7 +2,7 @@ package WebService::Pixela;
 use 5.008001;
 use strict;
 use warnings;
-use Furl;
+use HTTP::Tiny;
 use Carp qw/croak/;
 use WebService::Pixela::User;
 use URI;
@@ -33,7 +33,7 @@ sub new {
     $self->{username} = $args{username} || croak 'require username';
     $self->{token}    = $args{token}    || undef;
     $self->{base_url} = $args{base_url} || "https://pixe.la/";
-    $self->{_agent}   = Furl->new(agent => "$class/$VERSION");
+    $self->{_agent}   = HTTP::Tiny->new();
     $self->{user}     = WebService::Pixela::User->new($self);
 
     return $self;
@@ -46,13 +46,12 @@ sub simple_request {
     $uri->path($path);
 
     my $res = $self->_agent->request(
-        method  => $method,
-        url     => $uri->as_string,
-        content => encode_json($content),
+         $method,
+         $uri->as_string,
+         {content => encode_json($content)},
     );
     return $res;
 }
-
 
 1;
 __END__

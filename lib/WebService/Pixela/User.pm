@@ -23,10 +23,10 @@ sub create {
     my $client = $self->client;
 
     my $content = {
-        token               => $client->token,
-        username            => $client->username,
-        agreeTermsOfService => $args{agreeTermsOfService} || "No",
-        notMinor            => $args{notMinor} || "No",
+        username            => $client->username          || croak 'require username',
+        token               => $client->token             || croak 'require token',
+        agreeTermsOfService => $args{agreeTermsOfService} || "yes",
+        notMinor            => $args{notMinor}            || "yes",
     };
     my $res = $client->simple_request('POST','/v1/users/',$content);
 }
@@ -39,15 +39,15 @@ __END__
 
 =head1 NAME
 
-WebService::Pixela - It's new $module
+WebService::Pixela::User - It's Pixela User API client
 
 =head1 SYNOPSIS
 
-    use WebService::Pixela;
+    use WebService::Pixela::User;
 
 =head1 DESCRIPTION
 
-WebService::Pixela is ...
+WebService::Pixela::User is ...
 
 =head1 LICENSE
 
