@@ -77,15 +77,85 @@ __END__
 
 =head1 NAME
 
-WebService::Pixela - It's new $module
+WebService::Pixela - It's Pixe.la API client for Perl.
 
 =head1 SYNOPSIS
 
+    use strict;
+    use warnings;
+
     use WebService::Pixela;
+
+    # All WebService::Pixela methods use this token and user name in URI, JSON, etc.
+    my $pixela = WebService::Pixela->new(token => "thisissecret", username => "testname");
+    print $pixela->username,"\n"; # testname
+    print $pixela->token,"\n";    # thisissecret
+
+    $pixela->user->create(); # default agreeTermsOfService and notMinor "yes"
+    # or...
+    $pixela->user->create(agreeTermsOfService => "no", notMinor => "no"); # can input agreeTermsOfService and notMinor
+
+
+    $pixela->user->delete(); # delete method not require arguments
+
 
 =head1 DESCRIPTION
 
-WebService::Pixela is ...
+WebService::Pixela is API client about Pixe.la.
+
+=head1 INTERFACE
+
+=head2 Class Methods
+
+=head3 C<< WebService::Pixela->new(%args) >>
+
+It is WebService::Pixela constructor.
+
+I<%args> might be:
+
+=over
+
+=item C<< username :  Str >>
+
+Pixela service username.
+
+=item C<< token  :  Str >>
+
+Pixela service token.
+
+=item C<< base_url : Str : default => 'https://pixe.la/' >>
+
+Pixela service api root url.
+(It does not include version URL.)
+
+=back
+
+=head4 What does the WebService::Pixela instance contain?
+
+WebService::Pixela instance have four representative instance methods.
+Each representative instance methods is an instance of the same class 'WebService::Pixela::' name.
+
+=head2 Instance Methods (It does not call other WebService::Pixela::.* instances.)
+
+=head3 C<< $pixela->username  : Str >>
+
+Output and set the user name of the instance.
+
+=head3 C<< $pixela->token  : Str >>
+
+Output and set the token of the instance.
+
+=head3 C<< $pixela->base_url : Str >>
+
+Output and set the base url of the instance.
+
+=head2 Instance Methods 
+
+=head3 C<< $pixela->user >>
+
+This instance method uses  a C<< WebService::Pixela::User >> instance.
+
+See also L<WebService::Pixela::User> .
 
 =head1 LICENSE
 

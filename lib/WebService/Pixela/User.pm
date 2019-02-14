@@ -26,8 +26,8 @@ sub create {
     my $params = {
         username            => $client->username,
         token               => $client->token,
-        agreeTermsOfService => $args{agreeTermsOfService} || "yes",
-        notMinor            => $args{notMinor}            || "yes",
+        agreeTermsOfService => $args{agree_terms_of_service} || "yes",
+        notMinor            => $args{not_minor}              || "yes",
     };
     my $res = $client->request('POST','users/',$params);
     return $res;
@@ -69,7 +69,39 @@ WebService::Pixela::User - It's Pixela User API client
 
 =head1 DESCRIPTION
 
-WebService::Pixela::User is ...
+WebService::Pixela::User is user API client about L<Pixe.la|https://pixe.la> webservice.
+
+=head1 INTERFACE
+
+=head2 instance methods
+
+This instance method require L<WebService::Pixela> instance.
+So, Usually use these methods from the C<< WebService::Pixela >> instance.
+
+=head3 C<< $pixela->user->create(%opts) >>
+
+It is Pixe.la user create.
+
+
+I<%opts> might be:
+
+=over
+
+=item C<< agree_terms_of_service :  [yes|no]  >>
+
+Specify yes or no whether you agree to the terms of service.
+If there is no input, it defaults to yes. (For this module.)
+
+=item C<< not_minor :  [yes|no]  >>
+
+Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using this (Pixela) service.
+If there is no input, it defaults to yes. (For this module.)
+
+=back
+
+=head4 See also
+
+L<https://docs.pixe.la/#/post-user>
 
 =head1 LICENSE
 
