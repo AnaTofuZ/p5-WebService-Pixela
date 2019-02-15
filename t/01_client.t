@@ -3,6 +3,7 @@ use warnings;
 
 use Test2::V0 -target => 'WebService::Pixela';
 
+use JSON;
 use WebService::Pixela;
 
 subtest 'create_instance_success' => sub {
@@ -35,5 +36,36 @@ subtest 'Test of new method call without argument' => sub {
     is($CLASS->new(username => 'test', token => 'testtoken')->base_url, 'https://pixe.la/', "base_url is pixe.la url");
 };
 
+
+subtest '_request tests' => sub {
+    my $mock = mock 'HTTP::Tiny' => (
+        override => [request => 
+            sub {
+                shift @_;
+                return ('HTTP::Tiny',@_);
+            }],
+    );
+
+    my $obj = $CLASS->new(username => 'test', token => 'testtoken');
+    is [$obj->_request('POST','testpath',encode_json({test => 'example'}))], ['HTTP::Tiny', 'POST','https://pixe.la/v1/testpath',encode_json({test => 'example'})];
+};
+
+my $request_test_mock_sub = sub { shift @_; return @_};
+
+subtest 'request test' => sub {
+    my $mock = mock $CLASS => (
+        override => [ _request => $request_test_mock_sub],
+    );
+    my $obj = $CLASS->new(username => 'test', token => 'testtoken');
+    is [$obj->request('POST','testpath',{test => 'example'})], ['POST','testpath',{ content => encode_json({test => 'example'})}];
+};
+
+subtest 'request_with_xuser_in_header  test' => sub {
+    my $mock = mock $CLASS => (
+        override => [ _request => $request_test_mock_sub],
+    );
+    my $obj = $CLASS->new(username => 'test', token => 'testtoken');
+    is [$obj->request_with_xuser_in_header('POST','testpath',{test => 'example'})], ['POST','testpath',{ headers => {'X-USER-TOKEN' => "testtoken"} , content => encode_json({test => 'example'})}];
+};
 
 done_testing;
