@@ -3,7 +3,7 @@ use 5.008001;
 use strict;
 use warnings;
 use HTTP::Tiny;
-use Carp qw/croak/;
+use Carp;
 use WebService::Pixela::User;
 use URI;
 use JSON;
@@ -31,7 +31,7 @@ sub new {
 
     # initalize
     $self->{username} = $args{username} || croak 'require username';
-    $self->{token}    = $args{token}    || undef;
+    $self->{token}    = $args{token}    || (carp('not input token'), undef);
     $self->{base_url} = $args{base_url} || "https://pixe.la/";
     $self->{_agent}   = HTTP::Tiny->new();
     $self->{user}     = WebService::Pixela::User->new($self);
