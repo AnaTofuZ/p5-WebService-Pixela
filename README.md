@@ -76,11 +76,30 @@ Output and set the base url of the instance.
 
 ## Instance Methods 
 
+It conforms to the official API document.
+See aloso [https://docs.pixe.la/](https://docs.pixe.la/) .
+
 ### `$pixela->user`
 
-This instance method uses  a `WebService::Pixela::User` instance.
+This instance method uses  a [WebService::Pixela::User](https://metacpan.org/pod/WebService::Pixela::User) instance.
 
-See also [WebService::Pixela::User](https://metacpan.org/pod/WebService::Pixela::User) .
+#### `$pixela->user->create(%opts)`
+
+It is Pixe.la user create.
+
+_%opts_ might be:
+
+- `agree_terms_of_service :  [yes|no]`
+
+    Specify yes or no whether you agree to the terms of service.
+    If there is no input, it defaults to yes. (For this module.)
+
+- `not_minor :  [yes|no]`
+
+    Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using this (Pixela) service.
+    If there is no input, it defaults to yes. (For this module.)
+
+[https://docs.pixe.la/#/post-user](https://docs.pixe.la/#/post-user)
 
 # LICENSE
 
@@ -92,3 +111,11 @@ it under the same terms as Perl itself.
 # AUTHOR
 
 Takahiro SHIMIZU <anatofuz@gmail.com>
+
+# POD ERRORS
+
+Hey! **The above document had some coding errors, which are explained below:**
+
+- Around line 188:
+
+    Unknown directive: =head5

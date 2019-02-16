@@ -157,11 +157,37 @@ Output and set the base url of the instance.
 
 =head2 Instance Methods 
 
+It conforms to the official API document.
+See aloso L<https://docs.pixe.la/> .
+
 =head3 C<< $pixela->user >>
 
-This instance method uses  a C<< WebService::Pixela::User >> instance.
+This instance method uses  a L<WebService::Pixela::User> instance.
 
-See also L<WebService::Pixela::User> .
+=head4 C<< $pixela->user->create(%opts) >>
+
+It is Pixe.la user create.
+
+
+I<%opts> might be:
+
+=over
+
+=item C<< agree_terms_of_service :  [yes|no]  >>
+
+Specify yes or no whether you agree to the terms of service.
+If there is no input, it defaults to yes. (For this module.)
+
+=item C<< not_minor :  [yes|no]  >>
+
+Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using this (Pixela) service.
+If there is no input, it defaults to yes. (For this module.)
+
+=back
+
+=head5 See also
+
+L<https://docs.pixe.la/#/post-user>
 
 =head1 LICENSE
 
