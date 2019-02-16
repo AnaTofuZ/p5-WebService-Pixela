@@ -17,7 +17,7 @@ WebService::Pixela - It's [https://pixe.la](https://pixe.la) API client for Perl
 
     $pixela->user->create(); # default agreeTermsOfService and notMinor "yes"
     # or...
-    $pixela->user->create(agreeTermsOfService => "no", notMinor => "no"); # can input agreeTermsOfService and notMinor
+    $pixela->user->create(agreeTermsOfService => "yes", notMinor => "no"); # can input agreeTermsOfService and notMinor
 
 
     $pixela->user->delete(); # delete method not require arguments
@@ -89,17 +89,35 @@ It is Pixe.la user create.
 
 _%opts_ might be:
 
-- `agree_terms_of_service :  [yes|no]`
+- `agree_terms_of_service :  [yes|no]  (default : "yes" )`
 
     Specify yes or no whether you agree to the terms of service.
     If there is no input, it defaults to yes. (For this module.)
 
-- `not_minor :  [yes|no]`
+- `not_minor :  [yes|no]  (default : "yes")`
 
     Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using this (Pixela) service.
     If there is no input, it defaults to yes. (For this module.)
 
-[https://docs.pixe.la/#/post-user](https://docs.pixe.la/#/post-user)
+See also [https://docs.pixe.la/#/post-user](https://docs.pixe.la/#/post-user)
+
+#### `$pixela->user->update($newtoken)`
+
+Updates the authentication token for the specified user.
+
+_$newtoken_ might be:
+
+- `$newtoken :Str`
+
+    It is a new authentication token.
+
+See also [https://docs.pixe.la/#/update-user](https://docs.pixe.la/#/update-user)
+
+#### `$pixela->user->delete()`
+
+Deletes the specified registered user.
+
+See also [https://docs.pixe.la/#/delete-user](https://docs.pixe.la/#/delete-user)
 
 # LICENSE
 
@@ -111,11 +129,3 @@ it under the same terms as Perl itself.
 # AUTHOR
 
 Takahiro SHIMIZU <anatofuz@gmail.com>
-
-# POD ERRORS
-
-Hey! **The above document had some coding errors, which are explained below:**
-
-- Around line 188:
-
-    Unknown directive: =head5
