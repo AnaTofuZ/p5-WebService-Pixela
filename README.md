@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/AnaTofuZ/p5-WebService-Pixela.svg?branch=master)](https://travis-ci.com/AnaTofuZ/p5-WebService-Pixela)
 # NAME
 
 WebService::Pixela - It's [https://pixe.la](https://pixe.la) API client for Perl.

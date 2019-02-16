@@ -1,5 +1,5 @@
 name = "WebService-Pixela"
-# badges = ["travis-ci.com"]
+badges = ["travis-ci.com"]
 authority="cpan:ANATOFUZ"
 
 module_maker="ModuleBuildTiny"
