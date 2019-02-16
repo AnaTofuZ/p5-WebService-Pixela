@@ -1,4 +1,4 @@
-requires 'perl', '5.010';
+requires 'perl', '5.010001';
 requires 'IO::Socket::SSL';
 requires 'Class::Accessor::Lite';
 requires 'HTTP::Tiny';
