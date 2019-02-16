@@ -56,8 +56,7 @@ sub _decode_or_simple_return_from_json {
 sub _request {
     my ($self,$method,$path,$params) = @_;
 
-    my $uri = URI->new($self->base_url);
-    $uri->path("/v1/".$path);
+    my $uri = URI->new('v1/'.$path)->abs($self->base_url);
 
     my $receive_json = $self->_agent->request($method, $uri->as_string, $params)->{"content"};
 
