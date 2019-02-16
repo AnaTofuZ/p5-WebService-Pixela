@@ -41,7 +41,7 @@ sub update {
         newToken    => $newtoken,
     };
     my $res = $client->request_with_xuser_in_header('PUT',('users/'.$client->username),$params);
-    $self->client->token = $newtoken;
+    $self->client->token($newtoken);
     return $res;
 }
 
