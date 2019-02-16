@@ -20,6 +20,7 @@ use Class::Accessor::Lite(
         username
         token
         base_url
+        decode
     /],
 );
 
@@ -30,15 +31,27 @@ sub new {
     my $self = bless +{}, $class;
 
     # initalize
-    $self->{username} = $args{username} || croak 'require username';
-    $self->{token}    = $args{token}    || (carp('not input token'), undef);
-    $self->{base_url} = $args{base_url} || "https://pixe.la/";
+    $self->{username} = $args{username} // croak 'require username';
+    $self->{token}    = $args{token}    // (carp('not input token'), undef);
+    $self->{base_url} = $args{base_url} // "https://pixe.la/";
+    $self->{decode}   = $args{decode}   // 1;
     $self->{_agent}   = HTTP::Tiny->new();
+
+    #WebService::Pixela instances
     $self->{user}     = WebService::Pixela::User->new($self);
 
     return $self;
 }
 
+sub _decode_or_simple_return_from_json {
+    my ($self,$rev_json) = @_;
+
+    unless ($self->decode){
+        return $rev_json;
+    }
+
+    return decode_json($rev_json);
+}
 
 sub _request {
     my ($self,$method,$path,$params) = @_;
@@ -46,8 +59,11 @@ sub _request {
     my $uri = URI->new($self->base_url);
     $uri->path("/v1/".$path);
 
-    return $self->_agent->request($method, $uri->as_string, $params);
+    my $receive_json = $self->_agent->request($method, $uri->as_string, $params)->{"content"};
+
+    return $self->_decode_or_simple_return_from_json($receive_json);
 }
+
 
 sub request {
     my ($self,$method,$path,$content) = @_;

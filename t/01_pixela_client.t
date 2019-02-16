@@ -13,7 +13,7 @@ subtest 'create_instance_success' => sub {
 };
 
 subtest 'use_methods' => sub {
-    can_ok($CLASS,qw/username token base_url user graph pixel webhook _agent/);
+    can_ok($CLASS,qw/username token base_url decode user graph pixel webhook _agent/);
 };
 
 subtest 'method by each instance' => sub {
@@ -23,8 +23,8 @@ subtest 'method by each instance' => sub {
 };
 
 subtest 'Whether the entered value is properly set' => sub {
-    my %params = ( username => 'test', token => 'testtoken', base_url => 'http://example.com' );
-    my $obj = $CLASS->new(username => $params{username}, token => $params{token}, base_url => $params{base_url});
+    my %params = ( username => 'test', token => 'testtoken', base_url => 'http://example.com' , decode => 0);
+    my $obj = $CLASS->new(username => $params{username}, token => $params{token}, base_url => $params{base_url}, decode => $params{decode});
     for my $key (keys %params){
         is ( [$obj->$key, $obj->{$key}], [($params{$key}) x 2], "$key is properly set.");
     }
@@ -34,15 +34,32 @@ subtest 'Test of new method call without argument' => sub {
     like( dies { $CLASS->new(); }, qr/require username/, "Not intput username" );
     like( warning { $CLASS->new(username => 'test'); }, qr/not input token/, "No input token");
     is($CLASS->new(username => 'test', token => 'testtoken')->base_url, 'https://pixe.la/', "base_url is pixe.la url");
+    is($CLASS->new(username => 'test', token => 'testtoken')->decode , '1', "decode json mode");
 };
 
+subtest '_decode_or_simple_return_from_json' => sub {
+    my $json_mock = encode_json({test => 'example'});
+    my $obj = $CLASS->new(username => 'test', token => 'testtoken');
+
+    is($obj->_decode_or_simple_return_from_json($json_mock), decode_json($json_mock), 'default decode_json');
+    $obj->decode(0);
+    is($obj->_decode_or_simple_return_from_json($json_mock), $json_mock, 'return simple json');
+};
 
 subtest '_request tests' => sub {
-    my $mock = mock 'HTTP::Tiny' => (
+    my $http_mock = mock 'HTTP::Tiny' => (
         override => [request => 
             sub {
                 shift @_;
-                return ('HTTP::Tiny',@_);
+                return ({content => ['HTTP::Tiny',@_]});
+            }],
+    );
+
+    my $json_mock = mock $CLASS => (
+        override => [ _decode_or_simple_return_from_json =>
+            sub {
+                my ($self,$array_ref) = @_;
+                return (@$array_ref);
             }],
     );
 
