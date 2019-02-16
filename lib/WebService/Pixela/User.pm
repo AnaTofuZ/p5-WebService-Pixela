@@ -65,7 +65,26 @@ WebService::Pixela::User - It's Pixela User API client
 
 =head1 SYNOPSIS
 
-    use WebService::Pixela::User;
+    use strict;
+    use warnings;
+    use utf8;
+
+    use WebService::Pixela;
+
+    # All WebService::Pixela methods use this token and user name in URI, JSON, etc.
+    my $pixela = WebService::Pixela->new(token => "thisissecret", username => "testname");
+    print $pixela->username,"\n"; # testname
+    print $pixela->token,"\n";    # thisissecret
+
+    $pixela->user->create(); # default agreeTermsOfService and notMinor "yes"
+    # or...
+    $pixela->user->create(agree_terms_of_service => "yes", not_minor => "no"); # can input agreeTermsOfService and notMinor
+
+    $pixela->user->update("newsecret_token"); # update method require new secret token characters
+    print $pixela->token,"\n";
+
+    $pixela->user->delete(); # delete method not require arguments
+
 
 =head1 DESCRIPTION
 
@@ -102,6 +121,32 @@ If there is no input, it defaults to yes. (For this module.)
 =head4 See also
 
 L<https://docs.pixe.la/#/post-user>
+
+=head3 C<< $pixela->user->update($newtoken) >>
+
+Updates the authentication token for the specified user.
+
+I<$newtoken> might be:
+
+=over
+
+=item C<< $newtoken :Str >>
+
+It is a new authentication token.
+
+=back
+
+=head4 See also
+
+L<https://docs.pixe.la/#/update-user>
+
+=head3 C<< $pixela->user->delete() >>
+
+Deletes the specified registered user.
+
+=head4 See also
+
+L<https://docs.pixe.la/#/delete-user>
 
 =head1 LICENSE
 

@@ -12,7 +12,7 @@ print $pixela->token,"\n";    # thisissecret
 
 $pixela->user->create(); # default agreeTermsOfService and notMinor "yes"
 # or...
-$pixela->user->create(agree_terms_of_service => "no", not_minor => "no"); # can input agreeTermsOfService and notMinor
+$pixela->user->create(agree_terms_of_service => "yes", not_minor => "no"); # can input agreeTermsOfService and notMinor
 
 $pixela->user->update("newsecret_token"); # update method require new secret token characters
 print $pixela->token,"\n";
