@@ -1,7 +1,7 @@
-requires 'perl', '5.008001';
+requires 'perl', '5.010';
 requires 'IO::Socket::SSL';
 requires 'Class::Accessor::Lite';
-requires 'Furl';
+requires 'HTTP::Tiny';
 requires 'JSON';
 requires 'URI';
 
@@ -11,4 +11,5 @@ on configure => sub {
 
 on test => sub {
     requires 'Test::More', '0.98';
+    requires 'Test2::V0';
 };
