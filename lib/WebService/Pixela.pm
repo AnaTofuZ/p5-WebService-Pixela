@@ -176,7 +176,7 @@ Output and set the token of the instance.
 
 Output and set the base url of the instance.
 
-=head3 C<< decode : boolean   >>
+=head3 C<< $pixela->decode : boolean   >>
 
 Output and set the decode of the instance.
 If I<decode> is true it returns a Perl object, false it returns json as is.
