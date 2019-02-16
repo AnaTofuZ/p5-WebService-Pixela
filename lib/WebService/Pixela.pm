@@ -119,7 +119,7 @@ WebService::Pixela - It's L<https://pixe.la> API client for Perl.
 
 WebService::Pixela is API client about L<https://pixe.la>
 
-=head1 ORIGINAL API DOCUMENTATION
+=head1 ORIGINAL API DOCUMENT
 
 See also L<https://docs.pixe.la/> .
 

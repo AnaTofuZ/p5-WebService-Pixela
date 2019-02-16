@@ -26,7 +26,7 @@ WebService::Pixela - It's [https://pixe.la](https://pixe.la) API client for Perl
 
 WebService::Pixela is API client about [https://pixe.la](https://pixe.la)
 
-# ORIGINAL API DOCUMENTATION
+# ORIGINAL API DOCUMENT
 
 See also [https://docs.pixe.la/](https://docs.pixe.la/) .
 
