@@ -55,6 +55,10 @@ _%args_ might be:
     Pixela service api root url.
     (It does not include version URL.)
 
+- `decode : boolean : default => 1`
+
+    If _decode_ is true it returns a Perl object, false it returns json as is.
+
 #### What does the WebService::Pixela instance contain?
 
 WebService::Pixela instance have four representative instance methods.
@@ -73,6 +77,11 @@ Output and set the token of the instance.
 ### `$pixela->base_url : Str`
 
 Output and set the base url of the instance.
+
+### `decode : boolean`
+
+Output and set the decode of the instance.
+If _decode_ is true it returns a Perl object, false it returns json as is.
 
 ## Instance Methods 
 

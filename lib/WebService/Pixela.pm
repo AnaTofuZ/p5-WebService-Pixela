@@ -150,6 +150,11 @@ Pixela service token.
 Pixela service api root url.
 (It does not include version URL.)
 
+=item C<< decode : boolean : default => 1  >>
+
+If I<decode> is true it returns a Perl object, false it returns json as is.
+
+
 =back
 
 =head4 What does the WebService::Pixela instance contain?
@@ -170,6 +175,11 @@ Output and set the token of the instance.
 =head3 C<< $pixela->base_url : Str >>
 
 Output and set the base url of the instance.
+
+=head3 C<< decode : boolean   >>
+
+Output and set the decode of the instance.
+If I<decode> is true it returns a Perl object, false it returns json as is.
 
 =head2 Instance Methods 
 
