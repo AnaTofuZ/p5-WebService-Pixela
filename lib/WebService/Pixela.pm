@@ -5,6 +5,7 @@ use warnings;
 use HTTP::Tiny;
 use Carp;
 use WebService::Pixela::User;
+use WebService::Pixela::Graph;
 use URI;
 use JSON;
 use Class::Accessor::Lite(
@@ -35,10 +36,11 @@ sub new {
     $self->{token}    = $args{token}    // (carp('not input token'), undef);
     $self->{base_url} = $args{base_url} // "https://pixe.la/";
     $self->{decode}   = $args{decode}   // 1;
-    $self->{_agent}   = HTTP::Tiny->new();
+    $self->{_agent}    = HTTP::Tiny->new();
 
     #WebService::Pixela instances
-    $self->{user}     = WebService::Pixela::User->new($self);
+    $self->{user}  = WebService::Pixela::User->new($self);
+    $self->{graph} = WebService::Pixela::Graph->new($self);
 
     return $self;
 }
@@ -61,6 +63,15 @@ sub _request {
     my $receive_json = $self->_agent->request($method, $uri->as_string, $params)->{"content"};
 
     return $self->_decode_or_simple_return_from_json($receive_json);
+}
+
+sub query_request {
+    my ($self,$method,$path,$query) = @_;
+
+    my $uri = URI->new('v1/'.$path)->abs($self->base_url);
+    $uri->query_form($query);
+
+    return $self->_agent->request($method, $uri->as_string)->{"content"};
 }
 
 
