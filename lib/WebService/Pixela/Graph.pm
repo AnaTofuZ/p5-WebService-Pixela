@@ -33,11 +33,7 @@ sub create {
     my ($self,%args) = @_;
     my $params = {};
 
-    $params->{id}   = $args{id}   // croak 'require id';
-    $params->{name} = $args{name} // croak 'require name';
-    $params->{unit} = $args{unit} // croak 'require unit';
-    $params->{type} = $args{type} // croak 'require type';
-
+    map { $params->{$_} = $args{$_} // croak "require $_" } (qw/id name unit type/);
     croak 'require color' unless $args{color};
 
     for my $color (qw/shibafu momiji sora ichou ajisai kuro/){
