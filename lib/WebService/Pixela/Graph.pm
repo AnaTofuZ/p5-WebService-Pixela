@@ -4,10 +4,6 @@ use strict;
 use warnings;
 use Carp qw/croak/;
 use JSON qw/encode_json/;
-use  Class::Accessor::Lite(
-    new => 0,
-    ro  => [qw/client id/],
-);
 
 our $VERSION = "0.01";
 
@@ -16,6 +12,21 @@ sub new {
     return bless +{
         client => $pixela_client,
     }, $class;
+}
+
+
+sub client {
+    my $self = shift;
+    return $self->{client};
+}
+
+sub id {
+    my $self = shift;
+    if (@_){
+        $self->{id} = shift;
+        return $self;
+    }
+    return $self->{id};
 }
 
 sub create {
