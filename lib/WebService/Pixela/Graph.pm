@@ -20,16 +20,23 @@ sub new {
 
 sub create {
     my ($self,%args) = @_;
-    my $client = $self->client;
-
     my $params = {
-        username            => $client->username,
-        token               => $client->token,
-        agreeTermsOfService => $args{agree_terms_of_service} || "yes",
-        notMinor            => $args{not_minor}              || "yes",
+        id   => $args{id}   // croak 'require id',
+        name => $args{name} // croak 'require name',
+        unit => $args{name} // croak 'require unit',
+        type => $args{type} // croak 'require type',
     };
-    my $res = $client->request('POST','users/',$params);
-    return $res;
+
+    for my $color (qw/shibafu momiji sora ichou ajisai kuro/){
+        if ($args{$color}){
+            $params->{color} = $args{$color};
+            last;
+        }
+    }
+    croak 'require color' unless $params->{color};
+
+    my $path = 'users/'.$self->client->username.'/graphs';
+    return $self->client->request_with_xuser_in_header('POST',$path,$params);
 }
 
 
@@ -77,8 +84,10 @@ sub delete {
     my $self = shift;
     my $client = $self->client;
 
-    my $res = $client->request_with_xuser_in_header('DELETE',('users/'.$client->username),{});
-    return $res;
+    my $id = $arg{id} // $self->id;
+    croak 'require graph id' unless $id;
+
+    return $client->request_with_xuser_in_header('DELETE',('users/'.$client->username.'/graphs/'.$id),{});
 }
 
 
