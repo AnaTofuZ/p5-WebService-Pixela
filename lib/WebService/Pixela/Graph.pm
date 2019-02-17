@@ -81,10 +81,10 @@ sub update {
 }
 
 sub delete {
-    my $self = shift;
+    my ($self,$id) = @_;
     my $client = $self->client;
 
-    my $id = $arg{id} // $self->id;
+    $id //= $self->id;
     croak 'require graph id' unless $id;
 
     return $client->request_with_xuser_in_header('DELETE',('users/'.$client->username.'/graphs/'.$id),{});
