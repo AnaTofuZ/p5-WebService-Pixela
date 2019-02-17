@@ -36,15 +36,11 @@ sub create {
     map { $params->{$_} = $args{$_} // croak "require $_" } (qw/id name unit type/);
     croak 'require color' unless $args{color};
 
-    for my $color (qw/shibafu momiji sora ichou ajisai kuro/){
-        if ($args{color} =~ /^${color}$/i){
-            $params->{color} = $args{color};
-            last;
-        }
-    }
+    $params->{color} = _color_validate($args{color});
     croak 'invalid color' unless $params->{color};
 
     my $path = 'users/'.$self->client->username.'/graphs';
+    $self->id($args{id});
     return $self->client->request_with_xuser_in_header('POST',$path,$params);
 }
 
@@ -77,7 +73,9 @@ sub update {
     croak 'require graph id' unless $id;
 
     my $params = {};
-    map { $params->{$_} = $arg{$_} if $arg{$_} } (qw/name unit color timezone/);
+    map { $params->{$_} = $arg{$_} if $arg{$_} } (qw/name unit timezone/);
+    $params->{color} = _color_validate($arg{color});
+    delete $params->{color} unless $params->{color};
 
     my @camel2snake = ([qw/purgeCacheURLs purge_cache_urls/], [qw/selfSufficient self_sufficient/]);
 
@@ -99,6 +97,15 @@ sub delete {
     return $client->request_with_xuser_in_header('DELETE',('users/'.$client->username.'/graphs/'.$id),{});
 }
 
+sub _color_validate  {
+    my $check_color = shift;
+    map {
+        if ($check_color  =~ /^$_$/i){
+            return lc($check_color);
+        }
+    } (qw/shibafu momiji sora ichou ajisai kuro/);
+    return undef;
+}
 
 1;
 __END__

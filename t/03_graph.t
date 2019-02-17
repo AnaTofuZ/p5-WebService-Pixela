@@ -13,7 +13,7 @@ my $pixela = WebService::Pixela->new(username => $username, token => $token);
 my $graph  = $pixela->graph;
 
 subtest 'use_methods' => sub {
-    can_ok($CLASS,qw/new client id create get get_svg update delete/);
+    can_ok($CLASS,qw/new client id create get get_svg update delete _color_validate/);
 };
 
 subtest 'new' => sub {
@@ -73,7 +73,7 @@ subtest 'create_method' => sub {
         name  => 'testname',
         unit  => 'testunit',
         type  => 'testtype',
-        color => 'ICHOU',
+        color => 'ichou',
     );
 
     my $path = 'users/'.$username.'/graphs';
@@ -87,6 +87,121 @@ subtest 'create_method' => sub {
         'input params call create method'
     );
 
+    is($graph->id,'testid');
+};
+
+subtest 'get_method' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_xuser_in_header => sub {shift @_; return [@_]; }],
+    );
+
+    my $path = 'users/'.$username.'/graphs';
+
+    is(
+        $graph->get(),
+        [   'GET',
+            $path,
+            {},
+        ],
+        'call get method'
+    );
+};
+
+subtest 'get_svg_method' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [query_request => sub {shift @_; return [@_]; }],
+    );
+
+    my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
+
+    my $id = "testid";
+    my $path = 'users/'.$username.'/graphs/'.$id;
+
+    $graph->id($id);
+
+    my %params = (
+        date  => "date_test",
+        mode  => "mode_test",
+        dummy => "not_include_return",
+    );
+
+    is(
+        $graph->get_svg(%params),
+        [   'GET',
+            $path,
+            {
+                date  => "date_test",
+                mode  => "mode_test",
+            },
+        ],
+        'input args call get svg method'
+    );
+
+    is(
+        $graph->get_svg(),
+        [   'GET',
+            $path,
+            {},
+        ],
+        'not input args call get svg method'
+    );
+    $graph->id(undef);
+
+    like(dies {$graph->get_svg(%params)} ,qr/require graph id/, 'input args call get svg method' );
+
+    $params{id} = $id;
+
+    is(
+        $graph->get_svg(%params),
+        [   'GET',
+            $path,
+            {
+                date  => "date_test",
+                mode  => "mode_test",
+            },
+        ],
+        'input args call get svg method'
+    );
+
+
+};
+
+my $mock = mock 'WebService::Pixela' => (
+    override => [request_with_xuser_in_header => sub {shift @_; return [@_]; }],
+);
+
+subtest 'input_arg_call_update_method' => sub {
+    my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
+
+    my %params = (
+        id               => 'input_id',
+        name             => 'graphname',
+        unit             => 'testunit',
+        color            => 'momiji',
+        purge_cache_urls => 'test_cache',
+        self_sufficient  => 'test_sufficient',
+    );
+    my $path = 'users/'.$username.'/graphs/input_id';
+
+    is(
+        $graph->update(%params),
+        [   'PUT',
+            $path,
+            {
+                name             => 'graphname',
+                unit             => 'testunit',
+                color            => 'momiji',
+                purgeCacheURLs   => 'test_cache',
+                selfSufficient   => 'test_sufficient',
+            },
+        ],
+        'input args call get svg method'
+    );
+};
+
+subtest 'input_arg_call_update_method' => sub {
+    my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
+    like (dies {$graph->update()}, qr/require graph id/, 'no input graph id');
 };
 
 done_testing;
