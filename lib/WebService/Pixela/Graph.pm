@@ -31,20 +31,22 @@ sub id {
 
 sub create {
     my ($self,%args) = @_;
-    my $params = {
-        id   => $args{id}   // croak 'require id',
-        name => $args{name} // croak 'require name',
-        unit => $args{name} // croak 'require unit',
-        type => $args{type} // croak 'require type',
-    };
+    my $params = {};
+
+    $params->{id}   = $args{id}   // croak 'require id';
+    $params->{name} = $args{name} // croak 'require name';
+    $params->{unit} = $args{unit} // croak 'require unit';
+    $params->{type} = $args{type} // croak 'require type';
+
+    croak 'require color' unless $args{color};
 
     for my $color (qw/shibafu momiji sora ichou ajisai kuro/){
-        if ($args{$color}){
-            $params->{color} = $args{$color};
+        if ($args{color} =~ /^${color}$/i){
+            $params->{color} = $args{color};
             last;
         }
     }
-    croak 'require color' unless $params->{color};
+    croak 'invalid color' unless $params->{color};
 
     my $path = 'users/'.$self->client->username.'/graphs';
     return $self->client->request_with_xuser_in_header('POST',$path,$params);
