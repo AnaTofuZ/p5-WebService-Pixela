@@ -68,6 +68,23 @@ subtest '_request tests' => sub {
     is [$obj->_request('POST','testpath',encode_json({test => 'example'}))], ['HTTP::Tiny', 'POST','https://pixe.la/v1/testpath',encode_json({test => 'example'})];
 };
 
+
+subtest 'query_request test' => sub {
+    my $mock = mock 'HTTP::Tiny'  => (
+        override => [ request =>
+            sub {
+                shift @_;
+                return {content => [@_]};
+            }],
+    );
+    my $obj = $CLASS->new(username => 'test', token => 'testtoken');
+    my $path  = 'testpath/path';
+    my $query = { test => 'example'};
+    my $url   = 'https://pixe.la/v1/testpath/path?test=example';
+
+    is $obj->query_request('GET',$path,$query), ['GET',$url];
+};
+
 my $request_test_mock_sub = sub { shift @_; return @_};
 
 subtest 'request test' => sub {
