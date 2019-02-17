@@ -18,7 +18,8 @@ subtest 'use_methods' => sub {
 
 subtest 'method by each instance' => sub {
     my $obj = $CLASS->new(username => 'test', token => 'testtoken');
-    isa_ok( $obj->user, [qw/WebService::Pixela::User/],"create instance at WebService::Pixela");
+    isa_ok( $obj->user,  [qw/WebService::Pixela::User/], "create instance at WebService::Pixela");
+    isa_ok( $obj->graph, [qw/WebService::Pixela::Graph/],"create instance at WebService::Pixela");
     isa_ok( $obj->_agent, [qw/HTTP::Tiny/],"_agent is HTTP::Tiny instance");
 };
 
