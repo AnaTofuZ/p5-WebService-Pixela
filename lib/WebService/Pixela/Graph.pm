@@ -33,11 +33,17 @@ sub create {
     my ($self,%args) = @_;
     my $params = {};
 
-    map { $params->{$_} = $args{$_} // croak "require $_" } (qw/id name unit type/);
-    croak 'require color' unless $args{color};
+    map { $params->{$_} = $args{$_} // croak "require $_" } (qw/id name unit/);
 
+    croak 'require type' unless $args{type};
+    map { if ( $args{type} =~ /^$_$/i){$params->{type} = lc($args{type})} } (qw/int float/);
+    croak 'invalid type' unless $params->{type};
+
+    croak 'require color' unless $args{color};
     $params->{color} = _color_validate($args{color});
     croak 'invalid color' unless $params->{color};
+
+    $params->{timezone} = $args{timezone} if $args{timezone};
 
     my $path = 'users/'.$self->client->username.'/graphs';
     $self->id($args{id});

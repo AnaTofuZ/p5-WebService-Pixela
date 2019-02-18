@@ -53,14 +53,17 @@ subtest 'id_method' => sub {
          'id method set undef id at instance');
 };
 
+#subtest '_color_validate' => sub {
+#    my @colors = (qw/shibafu momiji sora ichou ajisai kuro/);
+#};
 
 subtest 'no_args_create_method_croak' => sub {
     like( dies {$graph->create()}, qr/require id/, "no input id");
     like( dies {$graph->create(id => 'testid')}, qr/require name/, "no input name");
     like( dies {$graph->create(id => 'testid', name => 'testname')}, qr/require unit/, "no input unit");
     like( dies {$graph->create(id => 'testid', name => 'testname', unit => 1, )}, qr/require type/, "no input type");
-    like( dies {$graph->create(id => 'testid', name => 'testname', unit => 1, type => 1)}, qr/require color/, "no input color");
-    like( dies {$graph->create(id => 'testid', name => 'testname', unit => 1, type => 1, color => 'invalid')}, qr/invalid color/, "invalid color");
+    like( dies {$graph->create(id => 'testid', name => 'testname', unit => 1, type => 'int')}, qr/require color/, "no input color");
+    like( dies {$graph->create(id => 'testid', name => 'testname', unit => 1, type => 'int', color => 'invalid')}, qr/invalid color/, "invalid color");
 };
 
 subtest 'create_method' => sub {
@@ -72,7 +75,7 @@ subtest 'create_method' => sub {
         id    => 'testid',
         name  => 'testname',
         unit  => 'testunit',
-        type  => 'testtype',
+        type  => 'int',
         color => 'ichou',
     );
 
