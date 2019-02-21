@@ -33,10 +33,17 @@ sub create {
     my ($self,%args) = @_;
     my $params = {};
 
-    map { $params->{$_} = $args{$_} // croak "require $_" } (qw/id name unit/);
+    $params->{id} = $args{id} // $self->id();
+    croak 'require id' unless $params->{id};
+
+    map { $params->{$_} = $args{$_} // croak "require $_" } (qw/name unit/);
 
     croak 'require type' unless $args{type};
-    map { if ( $args{type} =~ /^$_$/i){$params->{type} = lc($args{type})} } (qw/int float/);
+    map {
+            if ( $args{type} =~ /^$_$/i){
+                $params->{type} = lc($args{type});
+            }
+        } (qw/int float/);
     croak 'invalid type' unless $params->{type};
 
     croak 'require color' unless $args{color};
@@ -46,7 +53,7 @@ sub create {
     $params->{timezone} = $args{timezone} if $args{timezone};
 
     my $path = 'users/'.$self->client->username.'/graphs';
-    $self->id($args{id});
+    $self->id($params->{id});
     return $self->client->request_with_xuser_in_header('POST',$path,$params);
 }
 
