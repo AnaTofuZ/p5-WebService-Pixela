@@ -6,6 +6,7 @@ use HTTP::Tiny;
 use Carp;
 use WebService::Pixela::User;
 use WebService::Pixela::Graph;
+#use WebService::Pixela::Webhook;
 use URI;
 use JSON;
 use Class::Accessor::Lite(
@@ -21,7 +22,6 @@ use Class::Accessor::Lite(
         username
         token
         base_url
-        decode
     /],
 );
 
@@ -41,8 +41,18 @@ sub new {
     #WebService::Pixela instances
     $self->{user}  = WebService::Pixela::User->new($self);
     $self->{graph} = WebService::Pixela::Graph->new($self);
+    #$self->{webhook} = WebService::Pixela::Webhook->new($self);
 
     return $self;
+}
+
+sub decode {
+    my $self = shift;
+    if (@_){
+        $self->{decode} = shift;
+        return $self;
+    }
+    return $self->{decode};
 }
 
 sub _decode_or_simple_return_from_json {
@@ -128,6 +138,14 @@ WebService::Pixela - It's L<https://pixe.la> API client for Perl.
 =head1 DESCRIPTION
 
 WebService::Pixela is API client about L<https://pixe.la>
+
+=head1 CI_PIXELA
+
+=begin html
+
+<a href="https://pixe.la/v1/users/anatofuz/graphs/p5-cpan-pixela.html"><img src="https://pixe.la/v1/users/anatofuz/graphs/p5-cpan-pixela" alt="CI activity" style="max-width:100%"></a>
+
+=end html
 
 =head1 ORIGINAL API DOCUMENT
 
