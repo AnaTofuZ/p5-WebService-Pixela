@@ -182,7 +182,7 @@ subtest 'input_arg_call_update_method' => sub {
         name             => 'graphname',
         unit             => 'testunit',
         color            => 'momiji',
-        purge_cache_urls => 'test_cache',
+        purge_cache_urls => [qw/test_cache hoge/],
         self_sufficient  => 'test_sufficient',
     );
     my $path = 'users/'.$username.'/graphs/input_id';
@@ -195,7 +195,7 @@ subtest 'input_arg_call_update_method' => sub {
                 name             => 'graphname',
                 unit             => 'testunit',
                 color            => 'momiji',
-                purgeCacheURLs   => 'test_cache',
+                purgeCacheURLs   => [qw/test_cache hoge/],
                 selfSufficient   => 'test_sufficient',
             },
         ],
