@@ -146,6 +146,7 @@ subtest 'get_svg_method' => sub {
         $graph->get_svg(),
         [   'GET',
             $path,
+            {},
         ],
         'not input args call get svg method'
     );
