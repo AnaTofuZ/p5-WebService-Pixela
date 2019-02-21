@@ -88,9 +88,10 @@ sub query_request {
 sub request {
     my ($self,$method,$path,$content) = @_;
 
-    my $params = {
-        content => encode_json($content),
-    };
+    my $params = {};
+    if (%$content){
+        $params->{content} = encode_json($content);
+    }
 
     return $self->_request($method,$path,$params);
 }
@@ -100,8 +101,11 @@ sub request_with_xuser_in_header {
 
     my $params = {
         headers => { 'X-USER-TOKEN' => $self->token },
-        content => encode_json($content),
     };
+
+    if (%$content){
+        $params->{content} = encode_json($content);
+    }
 
     return $self->_request($method,$path,$params);
 }
