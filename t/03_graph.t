@@ -171,11 +171,12 @@ subtest 'get_svg_method' => sub {
 
 };
 
-my $mock = mock 'WebService::Pixela' => (
-    override => [request_with_xuser_in_header => sub {shift @_; return [@_]; }],
-);
 
 subtest 'input_arg_call_update_method' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_xuser_in_header => sub {shift @_; return [@_]; }],
+    );
+
     my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
 
     my %params = (
@@ -205,11 +206,19 @@ subtest 'input_arg_call_update_method' => sub {
 };
 
 subtest 'input_arg_call_update_method' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_xuser_in_header => sub {shift @_; return [@_]; }],
+    );
+
     my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
     like (dies {$graph->update()}, qr/require graph id/, 'no input graph id');
 };
 
 subtest 'html' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_xuser_in_header => sub {shift @_; return [@_]; }],
+    );
+
     my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
     my $id    = "testid";
     $graph->id($id);
