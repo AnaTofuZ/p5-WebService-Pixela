@@ -60,7 +60,7 @@ sub create {
 
 sub get {
     my $self = shift;
-    return $self->client->request_with_xuser_in_header('GET',('users/'.$self->client->username.'/graphs'),{});
+    return $self->client->request_with_xuser_in_header('GET',('users/'.$self->client->username.'/graphs'))->{graphs};
 }
 
 
@@ -110,7 +110,7 @@ sub delete {
     $id //= $self->id;
     croak 'require graph id' unless $id;
 
-    return $client->request_with_xuser_in_header('DELETE',('users/'.$client->username.'/graphs/'.$id),{});
+    return $client->request_with_xuser_in_header('DELETE',('users/'.$client->username.'/graphs/'.$id));
 }
 
 sub html {

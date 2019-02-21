@@ -98,7 +98,7 @@ subtest 'create_method' => sub {
 
 subtest 'get_method' => sub {
     my $mock = mock 'WebService::Pixela' => (
-        override => [request_with_xuser_in_header => sub {shift @_; return [@_]; }],
+        override => [request_with_xuser_in_header => sub {shift @_; return { graphs => [@_] }; }],
     );
 
     my $path = 'users/'.$username.'/graphs';
@@ -107,7 +107,6 @@ subtest 'get_method' => sub {
         $graph->get(),
         [   'GET',
             $path,
-            {},
         ],
         'call get method'
     );
@@ -147,7 +146,6 @@ subtest 'get_svg_method' => sub {
         $graph->get_svg(),
         [   'GET',
             $path,
-            {},
         ],
         'not input args call get svg method'
     );
