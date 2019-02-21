@@ -87,14 +87,14 @@ sub update {
 
     my $params = {};
     map { $params->{$_} = $arg{$_} if $arg{$_} } (qw/name unit timezone/);
-    $params->{color} = _color_validate($arg{color});
+    $params->{color} = _color_validate($arg{color}) if defined $arg{color};
     delete $params->{color} unless $params->{color};
 
     my @camel2snake = ([qw/purgeCacheURLs purge_cache_urls/], [qw/selfSufficient self_sufficient/]);
 
     for my $camel_snake (@camel2snake){
         my ($camel, $snake) = @$camel_snake;
-        $params->{$camel} = $arg{$snake} if $arg{$snake};
+        $params->{$camel} = [$arg{$snake}] if $arg{$snake};
     }
 
     return $client->request_with_xuser_in_header('PUT',('users/'.$client->username.'/graphs/'.$id),$params);
@@ -108,6 +108,13 @@ sub delete {
     croak 'require graph id' unless $id;
 
     return $client->request_with_xuser_in_header('DELETE',('users/'.$client->username.'/graphs/'.$id),{});
+}
+
+sub view {
+    my ($self,$id) = @_;
+    my $client = $self->client;
+    $id //= $self->id;
+    return $client->base_url . 'v1/users/'.$client->username.'/graphs/'.$id.'.html';
 }
 
 sub _color_validate  {
