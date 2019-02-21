@@ -90,12 +90,15 @@ sub update {
     $params->{color} = _color_validate($arg{color}) if defined $arg{color};
     delete $params->{color} unless $params->{color};
 
-    my @camel2snake = ([qw/purgeCacheURLs purge_cache_urls/], [qw/selfSufficient self_sufficient/]);
 
-    for my $camel_snake (@camel2snake){
-        my ($camel, $snake) = @$camel_snake;
-        $params->{$camel} = [$arg{$snake}] if $arg{$snake};
+    if ($arg{purge_cache_urls}){
+        if (ref($arg{purge_cache_urls}) ne 'ARRAY'){
+            croak 'invalid types for purge_cache_urls';
+        }
+        $params->{purgeCacheURLs} = $arg{purge_cache_urls};
     }
+
+    $params->{selfSufficient} = $arg{self_sufficient} if defined $arg{self_sufficient};
 
     return $client->request_with_xuser_in_header('PUT',('users/'.$client->username.'/graphs/'.$id),$params);
 }
