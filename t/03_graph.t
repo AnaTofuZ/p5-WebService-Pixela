@@ -13,7 +13,7 @@ my $pixela = WebService::Pixela->new(username => $username, token => $token);
 my $graph  = $pixela->graph;
 
 subtest 'use_methods' => sub {
-    can_ok($CLASS,qw/new client id create get get_svg update delete _color_validate/);
+    can_ok($CLASS,qw/new client id create get get_svg update delete html pixels _color_validate/);
 };
 
 subtest 'new' => sub {
@@ -71,6 +71,8 @@ subtest 'create_method' => sub {
     my $mock = mock 'WebService::Pixela' => (
         override => [request_with_xuser_in_header => sub {shift @_; return [@_]; }],
     );
+
+    isnt($graph->id,'testid');
 
     my %params = (
         id    => 'testid',
@@ -206,6 +208,39 @@ subtest 'input_arg_call_update_method' => sub {
 subtest 'input_arg_call_update_method' => sub {
     my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
     like (dies {$graph->update()}, qr/require graph id/, 'no input graph id');
+};
+
+subtest 'html' => sub {
+    my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
+    my $id    = "testid";
+    $graph->id($id);
+    is($graph->html,'https://pixe.la/v1/users/testuser/graphs/testid.html');
+};
+
+subtest 'pixels' => sub {
+    my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
+
+    my $id = 'input_id';
+
+    my %params = (
+        id   => $id,
+        from => '20180101',
+        to   => '20180202',
+    );
+
+    my $path = 'users/'.$username.'/graphs/'. $id . '/pixels';
+
+    is(
+        $graph->pixels(%params),
+        [   'GET',
+            $path,
+            {
+                from => '20180101',
+                to   => '20180202',
+            },
+        ],
+        'input args call get pixels method'
+    );
 };
 
 done_testing;

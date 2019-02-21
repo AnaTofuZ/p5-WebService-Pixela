@@ -113,11 +113,25 @@ sub delete {
     return $client->request_with_xuser_in_header('DELETE',('users/'.$client->username.'/graphs/'.$id),{});
 }
 
-sub view {
+sub html {
     my ($self,$id) = @_;
     my $client = $self->client;
     $id //= $self->id;
     return $client->base_url . 'v1/users/'.$client->username.'/graphs/'.$id.'.html';
+}
+
+sub pixels {
+    my ($self,%args) = @_;
+
+    my $id  = $args{id} // $self->id;
+    croak 'require id' unless $id;
+
+    my $params = {};
+    $params->{to}   = $args{to}   if $args{to};
+    $params->{from} = $args{from} if $args{from};
+
+    my $path = 'users/'.$self->client->username.'/graphs/'.$id.'/pixels';
+    return $self->client->request_with_xuser_in_header('GET',$path,$params);
 }
 
 sub _color_validate  {
