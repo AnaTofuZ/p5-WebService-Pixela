@@ -29,8 +29,7 @@ WebService::Pixela is API client about [https://pixe.la](https://pixe.la)
 # CI\_PIXELA
 
 <div>
-
-    <img src="https://pixe.la/v1/users/anatofuz/graphs/p5-cpan-pixela.html" alt="CI activity" style="max-width:100%">
+    <a href="https://pixe.la/v1/users/anatofuz/graphs/p5-cpan-pixela.html"><img src="https://pixe.la/v1/users/anatofuz/graphs/p5-cpan-pixela.html" alt="CI activity" style="max-width:100%"></a>
 </div>
 
 # ORIGINAL API DOCUMENT
