@@ -26,6 +26,13 @@ WebService::Pixela - It's [https://pixe.la](https://pixe.la) API client for Perl
 
 WebService::Pixela is API client about [https://pixe.la](https://pixe.la)
 
+# CI\_PIXELA
+
+<div>
+
+    <img src="https://pixe.la/v1/users/anatofuz/graphs/p5-cpan-pixela.html" alt="CI activity" style="max-width:100%">
+</div>
+
 # ORIGINAL API DOCUMENT
 
 See also [https://docs.pixe.la/](https://docs.pixe.la/) .

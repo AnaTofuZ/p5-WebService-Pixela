@@ -13,3 +13,5 @@ perl:
   - "5.28"
 before_install:
     - cpanm --notest Test2::V0
+after_script:
+    - if [ "$PIXELA_WEBHOOK_URL" != "" ]; then curl -X POST $PIXELA_WEBHOOK_URL -H 'Content-Length:0'; fi
