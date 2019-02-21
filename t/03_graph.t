@@ -218,6 +218,15 @@ subtest 'html' => sub {
 };
 
 subtest 'pixels' => sub {
+my $mock = mock 'WebService::Pixela' => (
+    override => [request_with_xuser_in_header =>
+        sub {
+            shift @_;
+            return { pixels => [@_]};
+        }],
+    );
+
+
     my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
 
     my $id = 'input_id';

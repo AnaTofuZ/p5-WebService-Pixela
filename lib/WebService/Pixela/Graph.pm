@@ -131,7 +131,7 @@ sub pixels {
     $params->{from} = $args{from} if $args{from};
 
     my $path = 'users/'.$self->client->username.'/graphs/'.$id.'/pixels';
-    return $self->client->request_with_xuser_in_header('GET',$path,$params);
+    return $self->client->request_with_xuser_in_header('GET',$path,$params)->{pixels};
 }
 
 sub _color_validate  {
