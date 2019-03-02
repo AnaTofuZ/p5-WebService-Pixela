@@ -88,9 +88,11 @@ sub update {
 
     my $params = {};
     map { $params->{$_} = $arg{$_} if $arg{$_} } (qw/name unit timezone/);
-    $params->{color} = _color_validate($arg{color}) if defined $arg{color};
-    delete $params->{color} unless $params->{color};
 
+    if ($arg{color}){
+        $params->{color} = _color_validate($arg{color});
+        croak 'invalid color' unless $params->{color};
+    }
 
     if ($arg{purge_cache_urls}){
         if (ref($arg{purge_cache_urls}) ne 'ARRAY'){
