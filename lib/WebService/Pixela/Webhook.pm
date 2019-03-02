@@ -25,85 +25,35 @@ sub create {
     my ($self,%args) = @_;
     my $params = {};
 
+    #check graphID
     $params->{graphID} = $args{graph_id} // $self->client->graph->id;
     croak 'require graph_id' unless $params->{graphID};
 
+    #check type
     croak 'require type' unless $args{type};
-
     map {
-            if ( $args{type} =~ /^$_$/i){
+            if( $args{type} =~ /^$_$/i){
                 $params->{type} = lc($args{type});
             }
-        } (qw/increment decrement/);
-
+    } (qw/increment decrement/);
     croak 'invalid type' unless $params->{type};
 
     my $path = 'users/'.$self->client->username.'/webhooks';
     return $self->client->request_with_xuser_in_header('POST',$path,$params);
 }
 
-
 sub get {
-    my $self = shift;
-    return $self->client->request_with_xuser_in_header('GET',('users/'.$self->client->username.'/graphs'),{});
+    ...
 }
 
-
-sub get_svg {
-    my ($self, %args) = @_;
-    my $id = $args{id} // $self->id;
-    croak 'require graph id' unless $id;
-
-    my $query = {};
-    $query->{date} = $args{date} if $args{date};
-    $query->{mode} = $args{mode} if $args{mode};
-
-    my $path = 'users/'.$self->client->username.'/graphs/'.$id;
-
-    return $self->client->query_request('GET',$path,$query);
-}
-
-sub update {
-    my ($self,%arg) = @_;
-    my $client = $self->client;
-
-    my $id = $arg{id} // $self->id;
-    croak 'require graph id' unless $id;
-
-    my $params = {};
-    map { $params->{$_} = $arg{$_} if $arg{$_} } (qw/name unit timezone/);
-    $params->{color} = _color_validate($arg{color});
-    delete $params->{color} unless $params->{color};
-
-    my @camel2snake = ([qw/purgeCacheURLs purge_cache_urls/], [qw/selfSufficient self_sufficient/]);
-
-    for my $camel_snake (@camel2snake){
-        my ($camel, $snake) = @$camel_snake;
-        $params->{$camel} = $arg{$snake} if $arg{$snake};
-    }
-
-    return $client->request_with_xuser_in_header('PUT',('users/'.$client->username.'/graphs/'.$id),$params);
+sub invoke {
+    ...
 }
 
 sub delete {
-    my ($self,$id) = @_;
-    my $client = $self->client;
-
-    $id //= $self->id;
-    croak 'require graph id' unless $id;
-
-    return $client->request_with_xuser_in_header('DELETE',('users/'.$client->username.'/graphs/'.$id),{});
+    ...
 }
 
-sub _color_validate  {
-    my $check_color = shift;
-    map {
-        if ($check_color  =~ /^$_$/i){
-            return lc($check_color);
-        }
-    } (qw/shibafu momiji sora ichou ajisai kuro/);
-    return undef;
-}
 
 1;
 __END__
