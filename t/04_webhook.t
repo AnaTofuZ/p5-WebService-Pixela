@@ -11,7 +11,7 @@ my $token    = 'thisistoken';
 
 
 subtest 'use_methods' => sub {
-    can_ok($CLASS,qw/new client create get invoke delete/);
+    can_ok($CLASS,qw/new client create get invoke delete hash/);
 };
 
 subtest 'new_methods' => sub {

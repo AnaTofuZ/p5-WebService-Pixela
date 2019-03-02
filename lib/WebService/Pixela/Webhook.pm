@@ -20,6 +20,14 @@ sub client {
     return $self->{client};
 }
 
+sub hash {
+    my $self = shift;
+    if (@_){
+        $self->{hash} = shift;
+        return $self;
+    }
+    return $self->{hash};
+}
 
 sub create {
     my ($self,%args) = @_;
@@ -39,14 +47,34 @@ sub create {
     croak 'invalid type' unless $params->{type};
 
     my $path = 'users/'.$self->client->username.'/webhooks';
-    return $self->client->request_with_xuser_in_header('POST',$path,$params);
+    my $res  = $self->client->request_with_xuser_in_header('POST',$path,$params);
+
+    my $res_json = $self->client->decode() ? $res : encode_json($res);
+
+    if($res_json->{isuSuccess}){
+        $self->hash($res_json->{webhookHash});
+    }
+
+    return $res;
 }
 
 sub get {
-    ...
+    my $self   = shift;
+    my $client = $self->client;
+
+    my $path = 'users/'.$client->username.'/webhooks';
+    my $res = $client->request_with_xuser_in_header('GET',$path);
+
+    return $client->decode() ? $res->{webhooks} : $res;
 }
 
 sub invoke {
+    my ($self,$hash) = @_;
+    my $client = $self->client;
+
+    $hash //= $self->hash();
+
+    my $path = 'users/'.$client->username.'/webhooks'.$hash;
     ...
 }
 
