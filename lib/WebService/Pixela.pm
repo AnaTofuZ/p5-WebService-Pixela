@@ -6,7 +6,7 @@ use HTTP::Tiny;
 use Carp;
 use WebService::Pixela::User;
 use WebService::Pixela::Graph;
-#use WebService::Pixela::Webhook;
+use WebService::Pixela::Webhook;
 use URI;
 use JSON;
 use Class::Accessor::Lite(
@@ -36,12 +36,12 @@ sub new {
     $self->{token}    = $args{token}    // (carp('not input token'), undef);
     $self->{base_url} = $args{base_url} // "https://pixe.la/";
     $self->{decode}   = $args{decode}   // 1;
-    $self->{_agent}    = HTTP::Tiny->new();
+    $self->{_agent}   = HTTP::Tiny->new();
 
     #WebService::Pixela instances
-    $self->{user}  = WebService::Pixela::User->new($self);
-    $self->{graph} = WebService::Pixela::Graph->new($self);
-    #$self->{webhook} = WebService::Pixela::Webhook->new($self);
+    $self->{user}    = WebService::Pixela::User->new($self);
+    $self->{graph}   = WebService::Pixela::Graph->new($self);
+    $self->{webhook} = WebService::Pixela::Webhook->new($self);
 
     return $self;
 }
