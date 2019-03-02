@@ -79,7 +79,10 @@ sub query_request {
     my ($self,$method,$path,$query) = @_;
 
     my $uri = URI->new('v1/'.$path)->abs($self->base_url);
-    $uri->query_form($query);
+
+    if ($query){
+        $uri->query_form($query);
+    }
 
     return $self->_agent->request($method, $uri->as_string)->{"content"};
 }
@@ -266,6 +269,127 @@ See also L<https://docs.pixe.la/#/update-user>
 Deletes the specified registered user.
 
 See also L<https://docs.pixe.la/#/delete-user>
+
+=head3 C<< $pixela->graph >>
+
+This instance method uses  a L<WebService::Pixela::Graph> instance.
+
+=head4 C<< $pixela->graph->create(%opts) :$hash_ref >>
+
+It is Pixe.la graph create.
+
+I<%opts> might be:
+
+=over
+
+=item C<< [required (autoset)] id :  Str >>
+
+It is an ID for identifying the pixelation graph.
+
+If set in an instance of WebService::Pixela::Graph, use that value.
+
+=item C<< [required] name :  Str >>
+
+It is the name of the pixelation graph.
+
+=item C<< [required] unit :  Str >>
+
+It is a unit of the quantity recorded in the pixelation graph. Ex. commit, kilogram, calory.
+
+=item C<< [required] type :  Str >>
+
+It is the type of quantity to be handled in the graph. Only int or float are supported.
+
+=item C<< [required] color : Str >>
+
+Defines the display color of the pixel in the pixelation graph.
+I<shibafu> (green), I<momiji> (red), I<sora> (blue), I<ichou> (yellow), I<ajisai> (purple) and I<kuro> (black) are supported as color kind.
+
+=item C<< timezone : Str  >>
+
+[optional] Specify the timezone for handling this graph as I<Asia/Tokyo>. 
+If not specified, it is treated as I<UTC>.
+
+=item C<< self_sufficient : Str  >>
+
+[optional] If SVG graph with this field I<increment> or I<decrement> is referenced, Pixel of this graph itself will be incremented or decremented.
+It is suitable when you want to record the PVs on a web page or site simultaneously.
+The specification of increment or decrement is the same as Increment a Pixel and Decrement a Pixel with webhook.
+If not specified, it is treated as I<none> .
+
+=back
+
+See Also L<https://docs.pixe.la/#/post-graph>
+
+=head4 C<< $pixela->graph->get() >>
+
+Get all predefined pixelation graph definitions.
+
+If you setting I<$pixela->decode(1) [default]> return array refs.
+Otherwise it returns json.
+
+See Also L<https://docs.pixe.la/#/get-graph>
+
+=head4 C<< $pixela->graph->get_svg(%args) >>
+
+I<%opts> might be:
+
+=over
+
+=item C<< data :Str >>
+
+[optional] If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date.
+If this parameter is not specified, the current date and time will be the start date.
+(it is used C<<timezone>> setting if Graph’s C<<timezone>> is specified, if not specified, calculates it in C<<UTC>>)
+
+=item C<< mode :Str >>
+
+[optional] Specify the graph display mode.
+As of October 23, 2018, support only short mode for displaying only about 90 days.
+
+=back
+
+See Also L<https://docs.pixe.la/#/get-svg>
+
+=head4 C<< $pixela->graph->update(%args) >>
+
+I<%options> might be C<< $pixela->graph->create() >> options.
+
+See Also L<https://docs.pixe.la/#/put-graph>
+
+=head4 C<< $pixela->graph->delete() >>
+
+Delete the predefined pixelation graph definition.
+
+See Also L<https://docs.pixe.la/#/delete-graph>
+
+=head4 C<< $pixela->graph->html() >>
+
+Displays the details of the graph in html format.
+(This method return html urls)
+
+See Also L<https://docs.pixe.la/#/get-graph-html>
+
+=head4 C<< $pixela->graph->pixels(%args) >>
+
+Get a Date list of Pixel registered in the graph specified by graphID.
+You can specify a period with from and to parameters.
+
+I<%args> might be
+
+=over
+
+=item C<< from :Str >>
+
+[optional] Specify the start position of the period.
+
+=item C<< to : Str >>
+
+[optional] Specify the end position of the period.
+
+=back
+
+See Also L<https://docs.pixe.la/#/get-graph-pixels>
 
 =head1 LICENSE
 

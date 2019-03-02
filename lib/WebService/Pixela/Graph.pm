@@ -33,23 +33,29 @@ sub create {
     my ($self,%args) = @_;
     my $params = {};
 
+    #check id
     $params->{id} = $args{id} // $self->id();
     croak 'require id' unless $params->{id};
 
+    #check name unit
     map { $params->{$_} = $args{$_} // croak "require $_" } (qw/name unit/);
 
+    # check type
     croak 'require type' unless $args{type};
     map {
             if ( $args{type} =~ /^$_$/i){
                 $params->{type} = lc($args{type});
             }
-        } (qw/int float/);
+    } (qw/int float/);
+
     croak 'invalid type' unless $params->{type};
 
+    # check color
     croak 'require color' unless $args{color};
     $params->{color} = _color_validate($args{color});
     croak 'invalid color' unless $params->{color};
 
+    #no check timezone...
     $params->{timezone} = $args{timezone} if $args{timezone};
 
     my $path = 'users/'.$self->client->username.'/graphs';
@@ -89,6 +95,7 @@ sub update {
     my $params = {};
     map { $params->{$_} = $arg{$_} if $arg{$_} } (qw/name unit timezone/);
 
+    #color invalid -> croak
     if ($arg{color}){
         $params->{color} = _color_validate($arg{color});
         croak 'invalid color' unless $params->{color};
@@ -171,18 +178,28 @@ WebService::Pixela::Graph - It's Pixela Graph API client
     use WebService::Pixela;
 
     # All WebService::Pixela methods use this token and user name in URI, JSON, etc.
-    my $pixela = WebService::Pixela->new(token => "thisissecret", username => "testname");
-    print $pixela->username,"\n"; # testname
-    print $pixela->token,"\n";    # thisissecret
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+    my $graph  = $pixela->graph;
 
-    $pixela->user->create(); # default agreeTermsOfService and notMinor "yes"
-    # or...
-    $pixela->user->create(agree_terms_of_service => "yes", not_minor => "no"); # can input agreeTermsOfService and notMinor
+    $graph->id('thisisgraphid')->create(name => 'graphname', unit => 'test', 
+        type => 'int', color => 'sora', timezone => 'Asis/Tokyo');
 
-    $pixela->user->update("newsecret_token"); # update method require new secret token characters
-    print $pixela->token,"\n";
 
-    $pixela->user->delete(); # delete method not require arguments
+    my $graphs = $graph->get();
+    print $graphs->[0]->{id};
+
+    my $svg = $graphs->get_svg();
+
+    $graphs->update(name => 'update_graph_name',...);
+
+    # set html url
+    my $url = $graphs->html();
+
+    my $pixels = $graphs->pixels();
+
+    # delete graph
+    $graphs->delete();
+
 
 
 =head1 DESCRIPTION
@@ -196,56 +213,124 @@ WebService::Pixela::Graph is user API client about L<Pixe.la|https://pixe.la> we
 This instance method require L<WebService::Pixela> instance.
 So, Usually use these methods from the C<< WebService::Pixela >> instance.
 
-=head3 C<< $pixela->user->create(%opts) >>
 
-It is Pixe.la user create.
+=head4 C<< $pixela->graph->create(%opts) :$hash_ref >>
 
+It is Pixe.la graph create.
 
 I<%opts> might be:
 
 =over
 
-=item C<< agree_terms_of_service :  [yes|no]  >>
+=item C<< [required (autoset)] id :  Str >>
 
-Specify yes or no whether you agree to the terms of service.
-If there is no input, it defaults to yes. (For this module.)
+It is an ID for identifying the pixelation graph.
 
-=item C<< not_minor :  [yes|no]  >>
+If set in an instance of WebService::Pixela::Graph, use that value.
 
-Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using this (Pixela) service.
-If there is no input, it defaults to yes. (For this module.)
+=item C<< [required] name :  Str >>
+
+It is the name of the pixelation graph.
+
+=item C<< [required] unit :  Str >>
+
+It is a unit of the quantity recorded in the pixelation graph. Ex. commit, kilogram, calory.
+
+=item C<< [required] type :  Str >>
+
+It is the type of quantity to be handled in the graph. Only int or float are supported.
+
+=item C<< [required] color : Str >>
+
+Defines the display color of the pixel in the pixelation graph.
+I<shibafu> (green), I<momiji> (red), I<sora> (blue), I<ichou> (yellow), I<ajisai> (purple) and I<kuro> (black) are supported as color kind.
+
+=item C<< timezone : Str  >>
+
+[optional] Specify the timezone for handling this graph as I<Asia/Tokyo>. 
+If not specified, it is treated as I<UTC>.
+
+=item C<< self_sufficient : Str  >>
+
+[optional] If SVG graph with this field I<increment> or I<decrement> is referenced, Pixel of this graph itself will be incremented or decremented.
+It is suitable when you want to record the PVs on a web page or site simultaneously.
+The specification of increment or decrement is the same as Increment a Pixel and Decrement a Pixel with webhook.
+If not specified, it is treated as I<none> .
 
 =back
 
-=head4 See also
+See Also L<https://docs.pixe.la/#/post-graph>
 
-L<https://docs.pixe.la/#/post-user>
+=head4 C<< $pixela->graph->get() >>
 
-=head3 C<< $pixela->user->update($newtoken) >>
+Get all predefined pixelation graph definitions.
 
-Updates the authentication token for the specified user.
+If you setting I<$pixela->decode(1) [default]> return array refs.
+Otherwise it returns json.
 
-I<$newtoken> might be:
+See Also L<https://docs.pixe.la/#/get-graph>
+
+=head4 C<< $pixela->graph->get_svg(%args) >>
+
+I<%opts> might be:
 
 =over
 
-=item C<< $newtoken :Str >>
+=item C<< data :Str >>
 
-It is a new authentication token.
+[optional] If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date.
+If this parameter is not specified, the current date and time will be the start date.
+(it is used C<<timezone>> setting if Graph’s C<<timezone>> is specified, if not specified, calculates it in C<<UTC>>)
+
+=item C<< mode :Str >>
+
+[optional] Specify the graph display mode.
+As of October 23, 2018, support only short mode for displaying only about 90 days.
 
 =back
 
-=head4 See also
+See Also L<https://docs.pixe.la/#/get-svg>
 
-L<https://docs.pixe.la/#/update-user>
+=head4 C<< $pixela->graph->update(%args) >>
 
-=head3 C<< $pixela->user->delete() >>
+I<%options> might be C<< $pixela->graph->create() >> options.
 
-Deletes the specified registered user.
+See Also L<https://docs.pixe.la/#/put-graph>
 
-=head4 See also
+=head4 C<< $pixela->graph->delete() >>
 
-L<https://docs.pixe.la/#/delete-user>
+Delete the predefined pixelation graph definition.
+
+See Also L<https://docs.pixe.la/#/delete-graph>
+
+=head4 C<< $pixela->graph->html() >>
+
+Displays the details of the graph in html format.
+(This method return html urls)
+
+See Also L<https://docs.pixe.la/#/get-graph-html>
+
+=head4 C<< $pixela->graph->pixels(%args) >>
+
+Get a Date list of Pixel registered in the graph specified by graphID.
+You can specify a period with from and to parameters.
+
+I<%args> might be
+
+=over
+
+=item C<< from :Str >>
+
+[optional] Specify the start position of the period.
+
+=item C<< to : Str >>
+
+[optional] Specify the end position of the period.
+
+=back
+
+See Also L<https://docs.pixe.la/#/get-graph-pixels>
+
 
 =head1 LICENSE
 
