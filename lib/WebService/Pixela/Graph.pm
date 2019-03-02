@@ -115,8 +115,12 @@ sub delete {
 
 sub html {
     my ($self,$id) = @_;
+
     my $client = $self->client;
+
     $id //= $self->id;
+    croak 'require graph id' unless $id;
+
     return $client->base_url . 'v1/users/'.$client->username.'/graphs/'.$id.'.html';
 }
 
@@ -131,7 +135,9 @@ sub pixels {
     $params->{from} = $args{from} if $args{from};
 
     my $path = 'users/'.$self->client->username.'/graphs/'.$id.'/pixels';
-    return $self->client->request_with_xuser_in_header('GET',$path,$params)->{pixels};
+    my $res  = $self->client->request_with_xuser_in_header('GET',$path,$params);
+
+    return $self->client->decode() ? $res->{pixels} : $res;
 }
 
 sub _color_validate  {

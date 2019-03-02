@@ -235,7 +235,8 @@ my $mock = mock 'WebService::Pixela' => (
     );
 
 
-    my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+    my $graph  = $pixela->graph;
 
     my $id = 'input_id';
 
@@ -246,7 +247,7 @@ my $mock = mock 'WebService::Pixela' => (
     );
 
     my $path = 'users/'.$username.'/graphs/'. $id . '/pixels';
-
+    $pixela->decode(1);
     is(
         $graph->pixels(%params),
         [   'GET',
@@ -257,6 +258,22 @@ my $mock = mock 'WebService::Pixela' => (
             },
         ],
         'input args call get pixels method'
+    );
+
+    $pixela->decode(0);
+    is(
+        $graph->pixels(%params),
+        {
+            pixels =>
+                [   'GET',
+                    $path,
+                    {
+                        from => '20180101',
+                        to   => '20180202',
+                    },
+                ],
+        },
+        'decode 0 is dumpping original json'
     );
 };
 
