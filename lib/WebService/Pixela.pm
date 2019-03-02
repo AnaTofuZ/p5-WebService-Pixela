@@ -92,7 +92,7 @@ sub request {
     my ($self,$method,$path,$content) = @_;
 
     my $params = {};
-    if (%$content){
+    if (defined $content && %$content){
         $params->{content} = encode_json($content);
     }
 
@@ -106,7 +106,7 @@ sub request_with_xuser_in_header {
         headers => { 'X-USER-TOKEN' => $self->token },
     };
 
-    if (%$content){
+    if (defined $content && %$content){
         $params->{content} = encode_json($content);
     }
 
