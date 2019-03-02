@@ -139,7 +139,7 @@ WebService::Pixela::Webhook - It's Pixela Webhook API client
 
 =head1 DESCRIPTION
 
-WebService::Pixela::Graph is user API client about L<Pixe.la|https://pixe.la> webservice.
+WebService::Pixela::Webhook is user API client about L<Pixe.la|https://pixe.la> webservice.
 
 =head1 INTERFACE
 
