@@ -18,7 +18,8 @@ subtest 'use_methods' => sub {
 
 subtest 'method by each instance' => sub {
     my $obj = $CLASS->new(username => 'test', token => 'testtoken');
-    isa_ok( $obj->user, [qw/WebService::Pixela::User/],"create instance at WebService::Pixela");
+    isa_ok( $obj->user,  [qw/WebService::Pixela::User/], "create instance at WebService::Pixela");
+    isa_ok( $obj->graph, [qw/WebService::Pixela::Graph/],"create instance at WebService::Pixela");
     isa_ok( $obj->_agent, [qw/HTTP::Tiny/],"_agent is HTTP::Tiny instance");
 };
 
@@ -65,6 +66,23 @@ subtest '_request tests' => sub {
 
     my $obj = $CLASS->new(username => 'test', token => 'testtoken');
     is [$obj->_request('POST','testpath',encode_json({test => 'example'}))], ['HTTP::Tiny', 'POST','https://pixe.la/v1/testpath',encode_json({test => 'example'})];
+};
+
+
+subtest 'query_request test' => sub {
+    my $mock = mock 'HTTP::Tiny'  => (
+        override => [ request =>
+            sub {
+                shift @_;
+                return {content => [@_]};
+            }],
+    );
+    my $obj = $CLASS->new(username => 'test', token => 'testtoken');
+    my $path  = 'testpath/path';
+    my $query = { test => 'example'};
+    my $url   = 'https://pixe.la/v1/testpath/path?test=example';
+
+    is $obj->query_request('GET',$path,$query), ['GET',$url];
 };
 
 my $request_test_mock_sub = sub { shift @_; return @_};

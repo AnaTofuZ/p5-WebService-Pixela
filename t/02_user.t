@@ -3,7 +3,6 @@ use warnings;
 
 use Test2::V0 -target => 'WebService::Pixela::User';
 
-use JSON;
 use WebService::Pixela;
 
 my $username = 'testuser';

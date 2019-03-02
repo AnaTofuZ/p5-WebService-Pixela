@@ -26,6 +26,12 @@ WebService::Pixela - It's [https://pixe.la](https://pixe.la) API client for Perl
 
 WebService::Pixela is API client about [https://pixe.la](https://pixe.la)
 
+# CI\_PIXELA
+
+<div>
+    <a href="https://pixe.la/v1/users/anatofuz/graphs/p5-cpan-pixela.html"><img src="https://pixe.la/v1/users/anatofuz/graphs/p5-cpan-pixela" alt="CI activity" style="max-width:100%"></a>
+</div>
+
 # ORIGINAL API DOCUMENT
 
 See also [https://docs.pixe.la/](https://docs.pixe.la/) .
@@ -127,6 +133,115 @@ See also [https://docs.pixe.la/#/update-user](https://docs.pixe.la/#/update-user
 Deletes the specified registered user.
 
 See also [https://docs.pixe.la/#/delete-user](https://docs.pixe.la/#/delete-user)
+
+### `$pixela->graph`
+
+This instance method uses  a [WebService::Pixela::Graph](https://metacpan.org/pod/WebService::Pixela::Graph) instance.
+
+#### `$pixela->graph->create(%opts) :$hash_ref`
+
+It is Pixe.la graph create.
+
+_%opts_ might be:
+
+- `[required (autoset)] id :  Str`
+
+    It is an ID for identifying the pixelation graph.
+
+    If set in an instance of WebService::Pixela::Graph, use that value.
+
+- `[required] name :  Str`
+
+    It is the name of the pixelation graph.
+
+- `[required] unit :  Str`
+
+    It is a unit of the quantity recorded in the pixelation graph. Ex. commit, kilogram, calory.
+
+- `[required] type :  Str`
+
+    It is the type of quantity to be handled in the graph. Only int or float are supported.
+
+- `[required] color : Str`
+
+    Defines the display color of the pixel in the pixelation graph.
+    _shibafu_ (green), _momiji_ (red), _sora_ (blue), _ichou_ (yellow), _ajisai_ (purple) and _kuro_ (black) are supported as color kind.
+
+- `timezone : Str`
+
+    \[optional\] Specify the timezone for handling this graph as _Asia/Tokyo_. 
+    If not specified, it is treated as _UTC_.
+
+- `self_sufficient : Str`
+
+    \[optional\] If SVG graph with this field _increment_ or _decrement_ is referenced, Pixel of this graph itself will be incremented or decremented.
+    It is suitable when you want to record the PVs on a web page or site simultaneously.
+    The specification of increment or decrement is the same as Increment a Pixel and Decrement a Pixel with webhook.
+    If not specified, it is treated as _none_ .
+
+See Also [https://docs.pixe.la/#/post-graph](https://docs.pixe.la/#/post-graph)
+
+#### `$pixela->graph->get()`
+
+Get all predefined pixelation graph definitions.
+
+If you setting _$pixela-_decode(1) \[default\]> return array refs.
+Otherwise it returns json.
+
+See Also [https://docs.pixe.la/#/get-graph](https://docs.pixe.la/#/get-graph)
+
+#### `$pixela->graph->get_svg(%args)`
+
+_%opts_ might be:
+
+- `data :Str`
+
+    \[optional\] If you specify it in yyyyMMdd format, will create a pixelation graph dating back to the past with that day as the start date.
+    If this parameter is not specified, the current date and time will be the start date.
+    (it is used `<timezone`> setting if Graph’s `<timezone`> is specified, if not specified, calculates it in `<UTC`>)
+
+- `mode :Str`
+
+    \[optional\] Specify the graph display mode.
+    As of October 23, 2018, support only short mode for displaying only about 90 days.
+
+See Also [https://docs.pixe.la/#/get-svg](https://docs.pixe.la/#/get-svg)
+
+#### `$pixela->graph->update(%args)`
+
+_%options_ might be `$pixela->graph->create()` options.
+
+See Also [https://docs.pixe.la/#/put-graph](https://docs.pixe.la/#/put-graph)
+
+#### `$pixela->graph->delete()`
+
+Delete the predefined pixelation graph definition.
+
+See Also [https://docs.pixe.la/#/delete-graph](https://docs.pixe.la/#/delete-graph)
+
+#### `$pixela->graph->html()`
+
+Displays the details of the graph in html format.
+(This method return html urls)
+
+See Also [https://docs.pixe.la/#/get-graph-html](https://docs.pixe.la/#/get-graph-html)
+
+#### `$pixela->graph->pixels(%args)`
+
+Get a Date list of Pixel registered in the graph specified by graphID.
+You can specify a period with from and to parameters.
+
+_%args_ might be
+
+- `from :Str`
+
+    \[optional\] Specify the start position of the period.
+
+- `to : Str`
+
+    \[optional\] Specify the end position of the period.
+
+See Also [https://docs.pixe.la/#/get-graph-pixels](https://docs.pixe.la/#/get-graph-pixels)
 
 # LICENSE
 
