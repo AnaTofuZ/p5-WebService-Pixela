@@ -62,7 +62,7 @@ sub get {
     my $self   = shift;
     my $client = $self->client;
 
-    my $path = 'users/'.$client->username.'/webhooks';
+    my $path = 'users/'.$client->username.'/webhooks/';
     my $res = $client->request_with_xuser_in_header('GET',$path);
 
     return $client->decode() ? $res->{webhooks} : $res;
@@ -74,8 +74,7 @@ sub invoke {
 
     $hash //= $self->hash();
 
-    my $path = 'users/'.$client->username.'/webhooks'.$hash;
-
+    my $path = 'users/'.$client->username.'/webhooks/'.$hash;
     return $client->request_with_content_length_in_header('POST',$path,0);
 }
 
@@ -85,7 +84,7 @@ sub delete {
 
     $hash //= $self->hash();
 
-    my $path = 'users/'.$client->username.'/webhooks'.$hash;
+    my $path = 'users/'.$client->username.'/webhooks/'.$hash;
     return $self->client->request_with_xuser_in_header('DELETE',$path);
 }
 
