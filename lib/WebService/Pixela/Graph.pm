@@ -60,7 +60,8 @@ sub create {
 
 sub get {
     my $self = shift;
-    return $self->client->request_with_xuser_in_header('GET',('users/'.$self->client->username.'/graphs'))->{graphs};
+    my $res  = $self->client->request_with_xuser_in_header('GET',('users/'.$self->client->username.'/graphs'));
+    return $self->client->decode() ? $res->{graphs} : $res;
 }
 
 

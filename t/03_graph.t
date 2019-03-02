@@ -101,14 +101,30 @@ subtest 'get_method' => sub {
         override => [request_with_xuser_in_header => sub {shift @_; return { graphs => [@_] }; }],
     );
 
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+    my $graph  = $pixela->graph;
+
     my $path = 'users/'.$username.'/graphs';
 
+    $pixela->decode(1);
     is(
         $graph->get(),
         [   'GET',
             $path,
         ],
         'call get method'
+    );
+
+    $pixela->decode(0);
+    is(
+        $graph->get(),
+        {
+            graphs =>
+                [   'GET',
+                    $path,
+                ],
+        },
+        'call get method at decode(0)'
     );
 };
 
