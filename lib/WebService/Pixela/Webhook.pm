@@ -75,11 +75,18 @@ sub invoke {
     $hash //= $self->hash();
 
     my $path = 'users/'.$client->username.'/webhooks'.$hash;
-    ...
+
+    return $client->request_with_content_length_in_header('POST',$path,0);
 }
 
 sub delete {
-    ...
+    my ($self,$hash) = @_;
+    my $client = $self->client;
+
+    $hash //= $self->hash();
+
+    my $path = 'users/'.$client->username.'/webhooks'.$hash;
+    return $self->client->request_with_xuser_in_header('DELETE',$path);
 }
 
 

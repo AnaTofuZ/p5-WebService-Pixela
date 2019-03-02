@@ -113,6 +113,19 @@ sub request_with_xuser_in_header {
     return $self->_request($method,$path,$params);
 }
 
+sub request_with_content_length_in_header {
+    my ($self,$method,$path,$length) = @_;
+
+    $length //= 0;
+
+    my $params = {
+        headers => { 'Content-Length' => $length },
+    };
+
+    return $self->_request($method,$path);
+}
+
+
 1;
 __END__
 
