@@ -6,7 +6,7 @@ use HTTP::Tiny;
 use Carp;
 use WebService::Pixela::User;
 use WebService::Pixela::Graph;
-#use WebService::Pixela::Webhook;
+use WebService::Pixela::Webhook;
 use URI;
 use JSON;
 use Class::Accessor::Lite(
@@ -36,12 +36,12 @@ sub new {
     $self->{token}    = $args{token}    // (carp('not input token'), undef);
     $self->{base_url} = $args{base_url} // "https://pixe.la/";
     $self->{decode}   = $args{decode}   // 1;
-    $self->{_agent}    = HTTP::Tiny->new();
+    $self->{_agent}   = HTTP::Tiny->new();
 
     #WebService::Pixela instances
-    $self->{user}  = WebService::Pixela::User->new($self);
-    $self->{graph} = WebService::Pixela::Graph->new($self);
-    #$self->{webhook} = WebService::Pixela::Webhook->new($self);
+    $self->{user}    = WebService::Pixela::User->new($self);
+    $self->{graph}   = WebService::Pixela::Graph->new($self);
+    $self->{webhook} = WebService::Pixela::Webhook->new($self);
 
     return $self;
 }
@@ -112,6 +112,19 @@ sub request_with_xuser_in_header {
 
     return $self->_request($method,$path,$params);
 }
+
+sub request_with_content_length_in_header {
+    my ($self,$method,$path,$length) = @_;
+
+    $length //= 0;
+
+    my $params = {
+        headers => { 'Content-Length' => $length },
+    };
+
+    return $self->_request($method,$path);
+}
+
 
 1;
 __END__
@@ -390,6 +403,95 @@ I<%args> might be
 =back
 
 See Also L<https://docs.pixe.la/#/get-graph-pixels>
+
+=head3 C<< $pixela->webhook >>
+
+This instance method uses  a L<WebService::Pixela::Webhook> instance.
+
+=head4 C<< $pixela->webhook->create(%opts) >>
+
+Create a new Webhook by Pixe.la
+This method return webhookHash, this is automatically set instance.
+
+I<%opts> might be:
+
+=over
+
+=item C<< [required] graph_id  :  Str  >>
+
+Specify the target graph as an ID.
+If the graph id is set for an instance, it will be automatically used.
+(You do not need to enter it as an argument)
+
+=item C<< [required] type : [increment|decrement] >>
+
+Specify the behavior when this Webhook is invoked.
+Only C<< increment >> or C<< decrement >> are supported.
+(There is no distinction between upper case and lower case letters.)
+
+=back
+
+=head4 See also
+
+L<https://docs.pixe.la/#/post-webhook>
+
+=head4 C<< $pixela->webhook->hash($webhookhash) >>
+
+This is webhookHash.
+Used by Pixela's webhook service.
+
+I<$webhookhash> might be:
+
+=over
+
+=item C<< $webhookhash :Str >>
+
+It is a new webhookHash.
+If the graph id is set for an instance, it will be automatically used create method.
+
+=back
+
+=head4 C<< $pixela->webhook->get() >>
+
+Get all predefined webhooks definitions.
+This method return array_ref or json value(switching decode method).
+
+See also L<https://docs.pixe.la/#/get-webhook>
+
+=head4 C<< $pixela->webhook->invoke($webhookhash) >>
+
+Invoke the webhook registered in advance.
+It is used “timezone” setting as post date if Graph’s “timezone” is specified, if not specified, calculates it in “UTC”.
+
+I<$webhookhash> might be:
+
+=over
+
+=item C<< $webhookhash :Str >>
+
+If the webhookhash is using thid method , it will be automatically used.
+(You do not need to enter it as an argument)
+
+=back
+
+See also L<https://docs.pixe.la/#/invoke-webhook>
+
+=head4 C<< $pixela->webhook->delete($webhookhash) >>
+
+Delete the registered Webhook.
+
+I<$webhookhash> might be:
+
+=over
+
+=item C<< $webhookhash :Str >>
+
+If the webhookhash is using thid method , it will be automatically used.
+(You do not need to enter it as an argument)
+
+=back
+
+See also L<https://docs.pixe.la/#/delete-webhook>
 
 =head1 LICENSE
 
