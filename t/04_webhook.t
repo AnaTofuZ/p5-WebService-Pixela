@@ -177,6 +177,8 @@ subtest 'delete_method' => sub {
 
     my $pixela = WebService::Pixela->new(username => $username, token => $token);
 
+    like( dies {$pixela->webhook->delete()}, qr/require webhookHash/, 'require webhookHash');
+
     my $hash_mock = 'hash_mock';
     my $path      = "users/$username/webhooks/$hash_mock";
     my $mock_hash = ['DELETE',$path];

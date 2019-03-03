@@ -73,6 +73,7 @@ sub invoke {
     my $client = $self->client;
 
     $hash //= $self->hash();
+    croak 'require webhookHash' unless $hash;
 
     my $path = 'users/'.$client->username.'/webhooks/'.$hash;
     return $client->request_with_content_length_in_header('POST',$path,0);
@@ -83,6 +84,7 @@ sub delete {
     my $client = $self->client;
 
     $hash //= $self->hash();
+    croak 'require webhookHash' unless $hash;
 
     my $path = 'users/'.$client->username.'/webhooks/'.$hash;
     return $self->client->request_with_xuser_in_header('DELETE',$path);
@@ -108,17 +110,10 @@ WebService::Pixela::Webhook - It's Pixela Webhook API client
 
     # All WebService::Pixela methods use this token and user name in URI, JSON, etc.
     my $pixela = WebService::Pixela->new(token => "thisissecret", username => "testname");
-    print $pixela->username,"\n"; # testname
-    print $pixela->token,"\n";    # thisissecret
 
-    $pixela->user->create(); # default agreeTermsOfService and notMinor "yes"
-    # or...
-    $pixela->user->create(agree_terms_of_service => "yes", not_minor => "no"); # can input agreeTermsOfService and notMinor
+    # setting graph id
+    $pixela->graph->id('graph_id');
 
-    $pixela->user->update("newsecret_token"); # update method require new secret token characters
-    print $pixela->token,"\n";
-
-    $pixela->user->delete(); # delete method not require arguments
 
 
 =head1 DESCRIPTION
@@ -132,56 +127,96 @@ WebService::Pixela::Webhook is user API client about L<Pixe.la|https://pixe.la> 
 This instance method require L<WebService::Pixela> instance.
 So, Usually use these methods from the C<< WebService::Pixela >> instance.
 
-=head3 C<< $pixela->user->create(%opts) >>
+=head3 C<< $pixela->webhook->create(%opts) >>
 
-It is Pixe.la user create.
-
+Create a new Webhook by Pixe.la
+This method return webhookHash, this is automatically set instance.
 
 I<%opts> might be:
 
 =over
 
-=item C<< agree_terms_of_service :  [yes|no]  >>
+=item C<< [required] graph_id  :  Str  >>
 
-Specify yes or no whether you agree to the terms of service.
-If there is no input, it defaults to yes. (For this module.)
+Specify the target graph as an ID.
+If the graph id is set for an instance, it will be automatically used.
+(You do not need to enter it as an argument)
 
-=item C<< not_minor :  [yes|no]  >>
+=item C<< [required] type : [increment|decrement] >>
 
-Specify yes or no as to whether you are not a minor or if you are a minor and you have the parental consent of using this (Pixela) service.
-If there is no input, it defaults to yes. (For this module.)
+Specify the behavior when this Webhook is invoked.
+Only C<< increment >> or C<< decrement >> are supported.
+(There is no distinction between upper case and lower case letters.)
 
 =back
 
 =head4 See also
 
-L<https://docs.pixe.la/#/post-user>
+L<https://docs.pixe.la/#/post-webhook>
 
-=head3 C<< $pixela->user->update($newtoken) >>
+=head3 C<< $pixela->webhook->hash($webhookhash) >>
 
-Updates the authentication token for the specified user.
+This is webhookHash.
+Used by Pixela's webhook service.
 
-I<$newtoken> might be:
+I<$webhookhash> might be:
 
 =over
 
-=item C<< $newtoken :Str >>
+=item C<< $webhookhash :Str >>
 
-It is a new authentication token.
+It is a new webhookHash.
+If the graph id is set for an instance, it will be automatically used create method.
+
+=back
+
+=head3 C<< $pixela->webhook->get() >>
+
+Get all predefined webhooks definitions.
+This method return array_ref or json value(switching decode method).
+
+=head4 See also
+
+L<https://docs.pixe.la/#/get-webhook>
+
+=head3 C<< $pixela->webhook->invoke($webhookhash) >>
+
+Invoke the webhook registered in advance.
+It is used “timezone” setting as post date if Graph’s “timezone” is specified, if not specified, calculates it in “UTC”.
+
+I<$webhookhash> might be:
+
+=over
+
+=item C<< $webhookhash :Str >>
+
+If the webhookhash is using thid method , it will be automatically used.
+(You do not need to enter it as an argument)
 
 =back
 
 =head4 See also
 
-L<https://docs.pixe.la/#/update-user>
+L<https://docs.pixe.la/#/invoke-webhook>
 
-=head3 C<< $pixela->user->delete() >>
+=head3 C<< $pixela->webhook->delete($webhookhash) >>
 
-Deletes the specified registered user.
+Delete the registered Webhook.
+
+I<$webhookhash> might be:
+
+=over
+
+=item C<< $webhookhash :Str >>
+
+If the webhookhash is using thid method , it will be automatically used.
+(You do not need to enter it as an argument)
+
+=back
 
 =head4 See also
 
-L<https://docs.pixe.la/#/delete-user>
+L<https://docs.pixe.la/#/delete-webhook>
 
 =head1 LICENSE
 

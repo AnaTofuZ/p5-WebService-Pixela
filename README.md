@@ -243,6 +243,79 @@ _%args_ might be
 
 See Also [https://docs.pixe.la/#/get-graph-pixels](https://docs.pixe.la/#/get-graph-pixels)
 
+### `$pixela->webhook`
+
+This instance method uses  a [WebService::Pixela::Webhook](https://metacpan.org/pod/WebService::Pixela::Webhook) instance.
+
+#### `$pixela->webhook->create(%opts)`
+
+Create a new Webhook by Pixe.la
+This method return webhookHash, this is automatically set instance.
+
+_%opts_ might be:
+
+- `[required] graph_id  :  Str`
+
+    Specify the target graph as an ID.
+    If the graph id is set for an instance, it will be automatically used.
+    (You do not need to enter it as an argument)
+
+- `[required] type : [increment|decrement]`
+
+    Specify the behavior when this Webhook is invoked.
+    Only `increment` or `decrement` are supported.
+    (There is no distinction between upper case and lower case letters.)
+
+#### See also
+
+[https://docs.pixe.la/#/post-webhook](https://docs.pixe.la/#/post-webhook)
+
+### `$pixela->webhook->hash($webhookhash)`
+
+This is webhookHash.
+Used by Pixela's webhook service.
+
+_$webhookhash_ might be:
+
+- `$webhookhash :Str`
+
+    It is a new webhookHash.
+    If the graph id is set for an instance, it will be automatically used create method.
+
+### `$pixela->webhook->get()`
+
+Get all predefined webhooks definitions.
+This method return array\_ref or json value(switching decode method).
+
+See also [https://docs.pixe.la/#/get-webhook](https://docs.pixe.la/#/get-webhook)
+
+#### `$pixela->webhook->invoke($webhookhash)`
+
+Invoke the webhook registered in advance.
+It is used “timezone” setting as post date if Graph’s “timezone” is specified, if not specified, calculates it in “UTC”.
+
+_$webhookhash_ might be:
+
+- `$webhookhash :Str`
+
+    If the webhookhash is using thid method , it will be automatically used.
+    (You do not need to enter it as an argument)
+
+See also [https://docs.pixe.la/#/invoke-webhook](https://docs.pixe.la/#/invoke-webhook)
+
+#### `$pixela->webhook->delete($webhookhash)`
+
+Delete the registered Webhook.
+
+_$webhookhash_ might be:
+
+- `$webhookhash :Str`
+
+    If the webhookhash is using thid method , it will be automatically used.
+    (You do not need to enter it as an argument)
+
+See also [https://docs.pixe.la/#/delete-webhook](https://docs.pixe.la/#/delete-webhook)
+
 # LICENSE
 
 Copyright (C) Takahiro SHIMIZU.
