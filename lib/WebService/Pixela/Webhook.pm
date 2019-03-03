@@ -114,7 +114,13 @@ WebService::Pixela::Webhook - It's Pixela Webhook API client
     # setting graph id
     $pixela->graph->id('graph_id');
 
+    $pixela->webhook->create(type => 'increment');
 
+    print $pixela->webhook->hash() ."\n"; # dump webhookHash
+
+    $pixela->webhook->invoke();
+
+    $pixela->webhook->delete();
 
 =head1 DESCRIPTION
 
