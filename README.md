@@ -270,7 +270,7 @@ _%opts_ might be:
 
 [https://docs.pixe.la/#/post-webhook](https://docs.pixe.la/#/post-webhook)
 
-### `$pixela->webhook->hash($webhookhash)`
+#### `$pixela->webhook->hash($webhookhash)`
 
 This is webhookHash.
 Used by Pixela's webhook service.
@@ -282,7 +282,7 @@ _$webhookhash_ might be:
     It is a new webhookHash.
     If the graph id is set for an instance, it will be automatically used create method.
 
-### `$pixela->webhook->get()`
+#### `$pixela->webhook->get()`
 
 Get all predefined webhooks definitions.
 This method return array\_ref or json value(switching decode method).

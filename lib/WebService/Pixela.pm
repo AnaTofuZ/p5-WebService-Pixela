@@ -435,7 +435,7 @@ Only C<< increment >> or C<< decrement >> are supported.
 
 L<https://docs.pixe.la/#/post-webhook>
 
-=head3 C<< $pixela->webhook->hash($webhookhash) >>
+=head4 C<< $pixela->webhook->hash($webhookhash) >>
 
 This is webhookHash.
 Used by Pixela's webhook service.
@@ -451,7 +451,7 @@ If the graph id is set for an instance, it will be automatically used create met
 
 =back
 
-=head3 C<< $pixela->webhook->get() >>
+=head4 C<< $pixela->webhook->get() >>
 
 Get all predefined webhooks definitions.
 This method return array_ref or json value(switching decode method).
