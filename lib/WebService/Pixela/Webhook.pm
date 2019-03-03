@@ -51,7 +51,7 @@ sub create {
 
     my $res_json = $self->client->decode() ? $res : encode_json($res);
 
-    if($res_json->{isuSuccess}){
+    if($res_json->{isSuccess}){
         $self->hash($res_json->{webhookHash});
     }
 
