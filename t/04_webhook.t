@@ -107,7 +107,7 @@ subtest 'create_method_not_decode' => sub {
 
     my $mock_json = encode_json({ isSuccess   => 1,webhookHash => $mock_hash});
 
-    like( decode_json($pixela->webhook->create(%args) ),
+    is( decode_json($pixela->webhook->create(%args) ),
             {
                 isSuccess   => 1,
                 webhookHash => $mock_hash,
@@ -118,5 +118,74 @@ subtest 'create_method_not_decode' => sub {
     is($pixela->webhook->hash(),$mock_hash,'setting hash response');
 };
 
+subtest 'get_method' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_xuser_in_header =>
+            sub {
+                shift @_;
+                return {
+                    isSuccess => 1,
+                    webhooks  => [@_],
+                };
+            }],
+    );
+
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+
+    my $path      = "users/$username/webhooks/";
+    my $mock_hash = ['GET',$path];
+
+    is($pixela->webhook->get(),$mock_hash,'get methods use decode');
+
+    $pixela->decode(0);
+
+    $mock_hash = { isSuccess => 1, webhooks => ['GET',$path]};
+
+    is($pixela->webhook->get(),$mock_hash,'get methods unde decode');
+};
+
+subtest 'invoke_method' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_content_length_in_header =>
+            sub {
+                shift @_;
+                return [@_];
+            }],
+    );
+
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+
+    my $hash_mock = 'hash_mock';
+    my $path      = "users/$username/webhooks/$hash_mock";
+    my $mock_hash = ['POST',$path,0];
+
+    is($pixela->webhook->invoke($hash_mock),$mock_hash,'invoke methods use arg hash');
+
+    $pixela->webhook->hash($hash_mock);
+
+    is($pixela->webhook->invoke(),$mock_hash,'invoke methods not use arg hash');
+};
+
+subtest 'delete_method' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_xuser_in_header =>
+            sub {
+                shift @_;
+                return [@_];
+            }],
+    );
+
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+
+    my $hash_mock = 'hash_mock';
+    my $path      = "users/$username/webhooks/$hash_mock";
+    my $mock_hash = ['DELETE',$path];
+
+    is($pixela->webhook->delete($hash_mock),$mock_hash,'delete methods use arg hash');
+
+    $pixela->webhook->hash($hash_mock);
+
+    is($pixela->webhook->delete(),$mock_hash,'delete methods not use arg hash');
+};
 
 done_testing;
