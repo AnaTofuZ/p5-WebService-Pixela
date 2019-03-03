@@ -24,6 +24,12 @@ subtest 'client_method' => sub {
     isa_ok($pixela->webhook->client,[qw/WebService::Pixela/], 'cient is WebService::Pixela');
 };
 
+subtest 'hash_method' => sub {
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+    isa_ok($pixela->webhook->hash('test_hash'),[qw/WebService::Pixela::Webhook/], 'return $self');
+    is($pixela->webhook->hash(),'test_hash', 'return hash_value');
+};
+
 subtest 'croak_create_method' => sub {
     my $pixela = WebService::Pixela->new(username => $username, token => $token);
     like( dies {$pixela->webhook->create()}, qr/require graph_id/, 'require graph_id');
@@ -74,5 +80,43 @@ sub create_method_true_test_helper {
 
     is($pixela->webhook->hash(),$mock_hash,'setting hash response');
 }
+
+subtest 'create_method_not_decode' => sub {
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_xuser_in_header =>
+            sub {
+                shift @_;
+                return encode_json({
+                    isSuccess   => 1,
+                    webhookHash => [@_],
+                });
+            }],
+    );
+
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+
+    $pixela->decode(0);
+
+    my %args = (
+        type     => 'Increment',
+        graph_id => 'mock_id',
+    );
+
+    my $path = "users/$username/webhooks";
+    my $mock_hash = ['POST',$path,{type => 'increment', graphID => 'mock_id'}];
+
+    my $mock_json = encode_json({ isSuccess   => 1,webhookHash => $mock_hash});
+
+    like( decode_json($pixela->webhook->create(%args) ),
+            {
+                isSuccess   => 1,
+                webhookHash => $mock_hash,
+            },
+        'create_method'
+    );
+
+    is($pixela->webhook->hash(),$mock_hash,'setting hash response');
+};
+
 
 done_testing;

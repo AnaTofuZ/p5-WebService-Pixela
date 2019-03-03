@@ -3,7 +3,7 @@ use 5.010001;
 use strict;
 use warnings;
 use Carp qw/croak/;
-use JSON qw/encode_json/;
+use JSON qw/decode_json/;
 
 our $VERSION = "0.01";
 
@@ -49,7 +49,7 @@ sub create {
     my $path = 'users/'.$self->client->username.'/webhooks';
     my $res  = $self->client->request_with_xuser_in_header('POST',$path,$params);
 
-    my $res_json = $self->client->decode() ? $res : encode_json($res);
+    my $res_json = $self->client->decode() ? $res : decode_json($res);
 
     if($res_json->{isSuccess}){
         $self->hash($res_json->{webhookHash});
