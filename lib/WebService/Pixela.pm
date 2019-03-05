@@ -6,6 +6,7 @@ use HTTP::Tiny;
 use Carp;
 use WebService::Pixela::User;
 use WebService::Pixela::Graph;
+use WebService::Pixela::Pixel;
 use WebService::Pixela::Webhook;
 use URI;
 use JSON;
@@ -41,6 +42,7 @@ sub new {
     #WebService::Pixela instances
     $self->{user}    = WebService::Pixela::User->new($self);
     $self->{graph}   = WebService::Pixela::Graph->new($self);
+    $self->{pixel}   = WebService::Pixela::Pixel->new($self);
     $self->{webhook} = WebService::Pixela::Webhook->new($self);
 
     return $self;
@@ -120,6 +122,21 @@ sub request_with_content_length_in_header {
 
     my $params = {
         headers => { 'Content-Length' => $length },
+    };
+
+    return $self->_request($method,$path);
+}
+
+sub request_with_dual_in_header {
+    my ($self,$method,$path,$length) = @_;
+
+    $length //= 0;
+
+    my $params = {
+        headers => {
+            'X-USER-TOKEN'   => $self->token,
+            'Content-Length' => $length,
+        },
     };
 
     return $self->_request($method,$path);
