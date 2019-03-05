@@ -3,7 +3,6 @@ use 5.010001;
 use strict;
 use warnings;
 use Carp qw/croak/;
-use JSON qw/decode_json/;
 
 our $VERSION = "0.01";
 
