@@ -119,7 +119,7 @@ sub _check_id {
 sub _create_path {
     my ($self,$id,$date) = @_;
     my $path = 'users/'.$self->client->username.'/graphs/'.$id;
-    return defined $date ? $path : $path . '/' . $date;
+    return defined $date ? $path . '/' . $date : $path;
 }
 
 
