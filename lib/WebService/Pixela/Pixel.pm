@@ -20,7 +20,7 @@ sub client {
     return $self->{client};
 }
 
-sub create {
+sub post {
     my ($self,%args) = @_;
     my $params = {};
 
@@ -32,6 +32,9 @@ sub create {
 
     #check quantity
     $params->{quantity} = $args{quantity} // croak 'require quantity';
+
+    #check optionalData
+    $params->{optionalData} = $args{optional_data} if $args{optional_data};
 
     my $path = $self->_create_path($id);
     return $self->client->request_with_xuser_in_header('POST',$path,$params);

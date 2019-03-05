@@ -9,7 +9,7 @@ my $username = 'testuser';
 my $token    = 'thisistoken';
 
 subtest 'use_methods' => sub {
-    can_ok($CLASS,qw/new client create get update increment decrement delete _check_id _create_path/);
+    can_ok($CLASS,qw/new client post get update increment decrement delete _check_id _create_path/);
 };
 
 subtest 'new_method' => sub {
@@ -45,18 +45,50 @@ subtest '_create_path method' => sub {
     is($pixela->pixel->_create_path($mock_id,$date), $url, 'insert_date');
 };
 
-subtest 'create_method' => sub {
+subtest 'post_method' => sub {
     my $pixela = WebService::Pixela->new(username => $username, token => $token);
 
     my $mock_id = 'mock_id';
     $pixela->graph->id($mock_id);
 
-    like(dies {$pixela->pixel->create()}, qr/require date/, 'require date');
+    like(dies {$pixela->pixel->post()}, qr/require date/, 'require date');
 
     my $mock_date = '20121211';
 
-    like(dies {$pixela->pixel->create(date => $mock_date)}, qr/require quantity/, 'require quantity');
+    like(dies {$pixela->pixel->post(date => $mock_date)}, qr/require quantity/, 'require quantity');
 
+    my $mock = mock 'WebService::Pixela' => (
+        override => [request_with_xuser_in_header =>
+            sub {
+                shift @_;
+                return [@_];
+            }],
+    );
+    my $mock_path     = $pixela->pixel->_create_path($mock_id);
+    my $mock_quantity = 9;
+
+    my $mock_res = [
+            'POST',
+            $mock_path,
+            {
+                date     => $mock_date,
+                quantity => $mock_quantity,
+            },
+    ];
+
+    is($pixela->pixel->post(date => $mock_date, quantity => $mock_quantity),
+        $mock_res,
+        'call post (not use quantity)'
+    );
+
+    my $mock_optional_data = 'mock_optional_data';
+
+    $mock_res->[2]->{optionalData} = $mock_optional_data;
+
+    is($pixela->pixel->post(date => $mock_date, quantity => $mock_quantity, optional_data => $mock_optional_data),
+        $mock_res,
+        'call post (use quantity)'
+    );
 };
 
 #subtest 'croak_create_method' => sub {
