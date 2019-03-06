@@ -27,7 +27,7 @@ WebService::Pixela - It's [https://pixe.la](https://pixe.la) API client for Perl
 
     print $pixela->graph->id('graph_id')->create(%graph_params)->{message} . "\n";
 
-    #return json tex
+    #return json text
 
     my $json = $pixela->decode(0)->graph->get();
     $pixela->decode(1);
