@@ -510,6 +510,185 @@ If the webhookhash is using thid method , it will be automatically used.
 
 See also L<https://docs.pixe.la/#/delete-webhook>
 
+=head4 C<< $pixela->pixel->post(%opts) >>
+
+It records the quantity of the specified date as a "Pixel".
+
+I<%opts> might be:
+
+=over
+
+=item C<< ([required]) id  :  Str  >>
+
+Specify the target graph as an ID.
+If the graph id is set for an instance, it will be automatically used.
+(You do not need to enter it as an argument)
+
+=item C<< [required] date : [yyyyMMdd] >>
+
+The date on which the quantity is to be recorded. It is specified in yyyyMMdd format.
+
+=item C<< [required] quantity : String >>
+
+Specify the quantity to be registered on the specified date.
+Validation rule: int^-?[0-9]+ float^-?[0-9]+.[0-9]+
+
+=item C<< optional_data : json_string >>
+
+Additional information other than quantity. It is specified as JSON string.
+The amount of this data must be less than 10 KB.
+
+=back
+
+See also
+
+L<https://docs.pixe.la/#/post-pixel>
+
+
+=head4 C<< $pixela->pixel->get(%opts) >>
+
+Get registered quantity as "Pixel".
+
+I<%opts> might be:
+
+=over
+
+=item C<< ([required]) id  :  Str  >>
+
+Specify the target graph as an ID.
+If the graph id is set for an instance, it will be automatically used.
+(You do not need to enter it as an argument)
+
+=item C<< [required] date : [yyyyMMdd] >>
+
+The date on which the quantity is to be recorded. It is specified in yyyyMMdd format.
+
+=back
+
+See also
+
+L<https://docs.pixe.la/#/get-pixel>
+
+=head4 C<< $pixela->pixel->update(%opts) >>
+
+Update the quantity already registered as a "Pixel".
+If target "Pixel" not exist, create a new "Pixel" and set quantity.
+
+I<%opts> might be:
+
+=over
+
+=item C<< ([required]) id  :  Str  >>
+
+Specify the target graph as an ID.
+If the graph id is set for an instance, it will be automatically used.
+(You do not need to enter it as an argument)
+
+=item C<< [required] date : [yyyyMMdd] >>
+
+The date on which the quantity is to be recorded. It is specified in yyyyMMdd format.
+
+=item C<<  quantity : String >>
+
+Specify the quantity to be registered on the specified date.
+Validation rule: int^-?[0-9]+ float^-?[0-9]+.[0-9]+
+
+=item C<< optional_data : json_string >>
+
+Additional information other than quantity. It is specified as JSON string.
+The amount of this data must be less than 10 KB.
+
+=back
+
+See also
+
+L<https://docs.pixe.la/#/put-pixel>
+
+=head4 C<< $pixela->pixel->increment(%opts) >>
+
+Increment quantity "Pixel" of the day (it is used "timezone" setting if Graph's "timezone" is specified, if not specified, calculates it in "UTC").
+If the graph type is int then 1 added, and for float then 0.01 added.
+
+I<%opts> might be:
+
+=over
+
+=item C<< ([required]) id  :  Str  >>
+
+Specify the target graph as an ID.
+If the graph id is set for an instance, it will be automatically used.
+(You do not need to enter it as an argument)
+
+=item C<< [required] date : [yyyyMMdd] >>
+
+The date on which the quantity is to be recorded. It is specified in yyyyMMdd format.
+
+=item C<<  length : Int (default 0) >>
+
+Since the request body is not specifield, specify the I<Content-Length> header.
+(Default 0)
+
+=back
+
+See also
+
+L<https://docs.pixe.la/#/increment-pixel>
+
+=head4 C<< $pixela->pixel->decrement(%opts) >>
+
+
+Decrement quantity "Pixel" of the day (it is used "timezone" setting if Graph's "timezone" is specified, if not specified, calculates it in "UTC").
+If the graph type is int then -1 added, and for float then -0.01 added.
+
+I<%opts> might be:
+
+=over
+
+=item C<< ([required]) id  :  Str  >>
+
+Specify the target graph as an ID.
+If the graph id is set for an instance, it will be automatically used.
+(You do not need to enter it as an argument)
+
+=item C<< [required] date : [yyyyMMdd] >>
+
+The date on which the quantity is to be recorded. It is specified in yyyyMMdd format.
+
+=item C<<  length : Int (default 0) >>
+
+Since the request body is not specifield, specify the I<Content-Length> header.
+(Default 0)
+
+=back
+
+See also
+
+L<https://docs.pixe.la/#/decrement-pixel>
+
+=head4 C<< $pixela->pixel->delete(%opts) >>
+
+Delete the registered "Pixel".
+
+I<%opts> might be:
+
+=over
+
+=item C<< ([required]) id  :  Str  >>
+
+Specify the target graph as an ID.
+If the graph id is set for an instance, it will be automatically used.
+(You do not need to enter it as an argument)
+
+=item C<< [required] date : [yyyyMMdd] >>
+
+The date on which the quantity is to be recorded. It is specified in yyyyMMdd format.
+
+=back
+
+See also
+
+L<https://docs.pixe.la/#/delete-pixel>
+
 =head1 LICENSE
 
 Copyright (C) Takahiro SHIMIZU.
