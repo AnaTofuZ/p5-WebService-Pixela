@@ -28,6 +28,7 @@ sub post {
 
     #check date
     $params->{date}     = $args{date}     // croak 'require date';
+    $params->{date} .= '';
 
     #check quantity
     $params->{quantity} = $args{quantity} // croak 'require quantity';
