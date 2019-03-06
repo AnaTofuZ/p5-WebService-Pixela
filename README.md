@@ -12,13 +12,29 @@ WebService::Pixela - It's [https://pixe.la](https://pixe.la) API client for Perl
 
     # All WebService::Pixela methods use this token and user name in URI, JSON, etc.
     my $pixela = WebService::Pixela->new(token => "thisissecret", username => "testname");
-    print $pixela->username,"\n"; # testname
-    print $pixela->token,"\n";    # thisissecret
 
     $pixela->user->create(); # default agreeTermsOfService and notMinor "yes"
     # or...
     $pixela->user->create(agree_terms_of_service => "yes", not_minor => "no"); # can input agreeTermsOfService and notMinor
 
+    my %graph_params = (
+        name     => 'test_graph',
+        unit     => 'test',
+        type     => 'int',
+        color    => 'shibafu',
+        timezone => 'Asia/Tokyo',
+    );
+
+    print $pixela->graph->id('graph_id')->create(%graph_params)->{message} . "\n";
+
+    #return json tex
+
+    my $json = $pixela->decode(0)->graph->get();
+    $pixela->decode(1);
+    $pixela->webhook->create(type => 'increment');
+
+    my $hash = $pixela->webhook->hash() . "\n";
+    my $pixel = $pixela->pixel->get(date => '20180915');
 
     $pixela->user->delete(); # delete method not require arguments
 
