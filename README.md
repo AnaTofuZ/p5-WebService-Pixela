@@ -247,8 +247,6 @@ See Also [https://docs.pixe.la/#/get-graph-pixels](https://docs.pixe.la/#/get-gr
 
 This instance method uses  a [WebService::Pixela::Pixel](https://metacpan.org/pod/WebService::Pixela::Pixel) instance.
 
-See also [https://docs.pixe.la/#/delete-webhook](https://docs.pixe.la/#/delete-webhook)
-
 #### `$pixela->pixel->post(%opts)`
 
 It records the quantity of the specified date as a "Pixel".
@@ -472,6 +470,8 @@ _$webhookhash_ might be:
 
     If the webhookhash is using thid method , it will be automatically used.
     (You do not need to enter it as an argument)
+
+See also [https://docs.pixe.la/#/delete-webhook](https://docs.pixe.la/#/delete-webhook)
 
 # LICENSE
 

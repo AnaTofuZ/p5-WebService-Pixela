@@ -425,7 +425,6 @@ See Also L<https://docs.pixe.la/#/get-graph-pixels>
 
 This instance method uses  a L<WebService::Pixela::Pixel> instance.
 
-See also L<https://docs.pixe.la/#/delete-webhook>
 
 =head4 C<< $pixela->pixel->post(%opts) >>
 
@@ -693,6 +692,7 @@ If the webhookhash is using thid method , it will be automatically used.
 
 =back
 
+See also L<https://docs.pixe.la/#/delete-webhook>
 
 =head1 LICENSE
 
