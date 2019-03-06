@@ -31,6 +31,7 @@ sub post {
 
     #check quantity
     $params->{quantity} = $args{quantity} // croak 'require quantity';
+    $params->{quantity}.= '';
 
     #check optionalData
     $params->{optionalData} = $args{optional_data} if $args{optional_data};
@@ -61,7 +62,7 @@ sub update {
     my $params = {};
 
     #check quantity
-    $params->{quantity}     = $args{quantity}      if $args{quantity};
+    $params->{quantity}     = $args{quantity} . ''      if $args{quantity};
 
     #check optionalData
     $params->{optionalData} = $args{optional_data} if $args{optional_data};
@@ -138,23 +139,23 @@ WebService::Pixela::Pixel - It's Pixela Webhook API client
 
     use strict;
     use warnings;
-    use utf8;
 
     use WebService::Pixela;
 
-    # All WebService::Pixela methods use this token and user name in URI, JSON, etc.
-    my $pixela = WebService::Pixela->new(token => "thisissecret", username => "testname");
+    my $pixela = WebService::Pixela->new(token => $ENV{TOKEN}, username => $ENV{USERNAME});
 
-    # setting graph id
-    $pixela->graph->id('graph_id');
+    # set graph id
+    $pixela->graph->id('anatofuz-test');
 
-    $pixela->webhook->create(type => 'increment');
+    $pixela->pixel->get(date => '20180915');
+    $pixela->pixel->update(date => '20180915', quantity => 50);
 
-    print $pixela->webhook->hash() ."\n"; # dump webhookHash
+    $pixela->pixel->increment(date => '20180915');
+    $pixela->pixel->decrement(date => '20180915');
 
-    $pixela->webhook->invoke();
+    $pixela->pixel->get(date => '20180915');
+    $pixela->pixel->delete(date => '20180915');
 
-    $pixela->webhook->delete();
 
 =head1 DESCRIPTION
 

@@ -139,7 +139,7 @@ sub request_with_dual_in_header {
         },
     };
 
-    return $self->_request($method,$path);
+    return $self->_request($method,$path,$params);
 }
 
 
