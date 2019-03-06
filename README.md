@@ -17,7 +17,7 @@ WebService::Pixela - It's [https://pixe.la](https://pixe.la) API client for Perl
 
     $pixela->user->create(); # default agreeTermsOfService and notMinor "yes"
     # or...
-    $pixela->user->create(agreeTermsOfService => "yes", notMinor => "no"); # can input agreeTermsOfService and notMinor
+    $pixela->user->create(agree_terms_of_service => "yes", not_minor => "no"); # can input agreeTermsOfService and notMinor
 
 
     $pixela->user->delete(); # delete method not require arguments
