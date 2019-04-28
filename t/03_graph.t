@@ -236,9 +236,14 @@ subtest 'html' => sub {
     );
 
     my $graph = WebService::Pixela->new(username => $username, token => $token)->graph;
-    my $id    = "testid";
-    $graph->id($id);
+    my %param = ( id => 'testid');
+    $graph->id($param{id});
     is($graph->html,'https://pixe.la/v1/users/testuser/graphs/testid.html');
+
+    $graph->id(undef);
+    is($graph->html(%param),'https://pixe.la/v1/users/testuser/graphs/testid.html');
+    $param{line} = 1;
+    is($graph->html(%param),'https://pixe.la/v1/users/testuser/graphs/testid.html?mode=line');
 };
 
 subtest 'pixels' => sub {

@@ -123,14 +123,20 @@ sub delete {
 }
 
 sub html {
-    my ($self,$id) = @_;
+    my ($self,%args) = @_;
 
     my $client = $self->client;
 
-    $id //= $self->id;
+    my $id = $args{id} // $self->id;
     croak 'require graph id' unless $id;
 
-    return $client->base_url . 'v1/users/'.$client->username.'/graphs/'.$id.'.html';
+    my $path = $client->base_url . 'v1/users/'.$client->username.'/graphs/'.$id.'.html';
+
+    if ($args{line}){
+        $path .= '?mode=line';
+    }
+
+    return $path;
 }
 
 sub pixels {
@@ -341,6 +347,24 @@ I<%args> might be
 =back
 
 See Also L<https://docs.pixe.la/#/get-graph-pixels>
+
+=head4 C<< $pixela->graph->stats($id) >>
+
+Based on the registered information, get various statistics.
+
+I<$id> might be
+
+=over
+
+=item C<< [required (autoset)] id :  Str >>
+
+It is an ID for identifying the pixelation graph.
+
+If set in an instance of WebService::Pixela::Graph, use that value.
+
+=back
+
+See Also L<https://docs.pixe.la/entry/get-graph-stats>
 
 
 =head1 LICENSE
