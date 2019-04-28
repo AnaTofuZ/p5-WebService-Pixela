@@ -293,4 +293,29 @@ my $mock = mock 'WebService::Pixela' => (
     );
 };
 
+subtest 'stats' => sub {
+my $mock = mock 'WebService::Pixela' => (
+    override => [request =>
+        sub {
+            shift @_;
+            return [@_] ;
+        }],
+    );
+
+
+    my $pixela = WebService::Pixela->new(username => $username, token => $token);
+    my $graph  = $pixela->graph;
+
+    my $id = 'input_id';
+
+    my $path = 'users/'.$username.'/graphs/'. $id . '/stats';
+    is(
+        $graph->stats($id),
+        [   'GET',
+            $path,
+        ],
+        'input args call get stats method'
+    );
+};
+
 done_testing;

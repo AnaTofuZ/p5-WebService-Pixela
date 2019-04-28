@@ -149,6 +149,18 @@ sub pixels {
     return $self->client->decode() ? $res->{pixels} : $res;
 }
 
+sub stats {
+    my ($self, $id) = @_;
+
+    my $client = $self->client;
+
+    $id //= $self->id;
+    croak 'require graph id' unless $id;
+
+    my $path = 'users/'.$self->client->username.'/graphs/'.$id.'/stats';
+    return $self->client->request('GET',$path);
+}
+
 sub _color_validate  {
     my $check_color = shift;
     map {
