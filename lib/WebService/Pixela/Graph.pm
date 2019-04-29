@@ -320,10 +320,27 @@ Delete the predefined pixelation graph definition.
 
 See Also L<https://docs.pixe.la/#/delete-graph>
 
-=head4 C<< $pixela->graph->html() >>
+=head4 C<< $pixela->graph->html(%args) >>
 
 Displays the details of the graph in html format.
 (This method return html urls)
+
+I<%args> might be
+
+=over
+
+=item C<< [required (autoset)] id :  Str >>
+
+It is an ID for identifying the pixelation graph.
+
+If set in an instance of WebService::Pixela::Graph, use that value.
+
+=item C<< ( line => true )  >>
+
+[optional] URI tail add line mode parameter.
+
+=back
+
 
 See Also L<https://docs.pixe.la/#/get-graph-html>
 
