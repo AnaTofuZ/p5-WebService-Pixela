@@ -69,7 +69,7 @@
          "web" : "https://github.com/AnaTofuZ/p5-WebService-Pixela"
       }
    },
-   "version" : "0.02",
+   "version" : "0.021",
    "x_authority" : "cpan:ANATOFUZ",
    "x_serialization_backend" : "JSON::PP version 2.97001",
    "x_static_install" : 1

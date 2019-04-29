@@ -26,7 +26,7 @@ use Class::Accessor::Lite(
     /],
 );
 
-our $VERSION = "0.02";
+our $VERSION = "0.021";
 
 sub new {
     my ($class,%args) = @_;
